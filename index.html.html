@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="日本語マスター">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#18181f">
+<meta name="description" content="Aprenda japonês do zero ou prepare-se para o JLPT N5.">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+<title>日本語マスター · Nihongo Master</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ──────────────────────────────── */
+:root{
+  --ink:#18181f; --ink2:#2d2d3a;
+  --paper:#faf9f6; --paper2:#f2f0ea; --paper3:#e6e2d8;
+  --red:#e63946; --redd:#b71c1c; --redl:#fde8ea;
+  --green:#1e8449; --greenl:#e8f5e9;
+  --gold:#e6a817; --goldd:#a87000; --goldl:#fff8e1;
+  --blue:#1565c0; --bluel:#e3f2fd;
+  --muted:#7a786e; --border:#dbd7cc;
+  --r:14px; --rs:10px;
+  --sh:0 2px 16px rgba(24,24,31,.09);
+  --sh-lg:0 8px 32px rgba(24,24,31,.14);
+  /* Safe areas for notch/home indicator */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  /* Bottom nav height */
+  --nav-h: 64px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%;overflow:hidden}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  height:100%;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+button{cursor:pointer;font-family:'DM Sans',sans-serif;border:none;-webkit-appearance:none}
+input{font-family:'DM Sans',sans-serif;-webkit-appearance:none;border-radius:0}
+/* Prevent text selection on UI elements */
+button, .nb, .kana-chip, .ch-btn{user-select:none;-webkit-user-select:none}
+
+/* ── SCREENS ──────────────────────────────────── */
+.scr{display:none;position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:fu .22s ease;z-index:1}
+.scr.on{display:flex;flex-direction:column}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── SPLASH (Profile Select) ──────────────────── */
+#s-splash{
+  background:var(--ink);
+  align-items:center;justify-content:center;
+  padding:calc(40px + var(--safe-top)) 24px calc(40px + var(--safe-bottom));
+  text-align:center;
+}
+.sp-bg{font-family:'Shippori Mincho',serif;font-size:min(28vw,140px);color:rgba(255,255,255,.04);line-height:1;margin-bottom:-70px;user-select:none}
+.sp-logo{font-family:'Shippori Mincho',serif;font-size:clamp(28px,8vw,42px);color:#fff;letter-spacing:.04em}
+.sp-tag{font-size:12px;color:rgba(255,255,255,.35);margin:8px 0 28px;letter-spacing:.12em;text-transform:uppercase}
+.sp-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:24px 20px;width:100%;max-width:360px;margin-bottom:16px}
+.sp-card-title{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:14px;text-align:left}
+/* Existing profiles */
+.profile-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;max-height:180px;overflow-y:auto}
+.profile-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,.07);border-radius:12px;cursor:pointer;transition:background .15s}
+.profile-item:hover,.profile-item:active{background:rgba(255,255,255,.13)}
+.profile-avatar{width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#fff;flex-shrink:0}
+.profile-name{font-size:15px;color:#fff;font-weight:500;flex:1;text-align:left}
+.profile-meta{font-size:11px;color:rgba(255,255,255,.35)}
+.profile-arrow{font-size:16px;color:rgba(255,255,255,.3)}
+.sp-divider{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sp-divider-line{flex:1;height:1px;background:rgba(255,255,255,.1)}
+.sp-divider-text{font-size:12px;color:rgba(255,255,255,.3)}
+.sp-name-input{
+  width:100%;padding:13px 16px;border-radius:12px;
+  border:1.5px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.08);color:#fff;font-size:16px;
+  outline:none;transition:border .2s;margin-bottom:12px;
+}
+.sp-name-input::placeholder{color:rgba(255,255,255,.25)}
+.sp-name-input:focus{border-color:rgba(255,255,255,.4)}
+.sp-btn{
+  width:100%;padding:14px;background:var(--red);color:#fff;
+  border-radius:50px;font-size:16px;font-weight:600;
+  transition:transform .15s,background .15s;
+}
+.sp-btn:active{background:var(--redd);transform:scale(.98)}
+.sp-btn:disabled{background:rgba(255,255,255,.15);color:rgba(255,255,255,.3);cursor:not-allowed}
+
+/* ── ONBOARDING ──────────────────────────────── */
+#s-ob{background:var(--paper);align-items:center;justify-content:center;padding:calc(20px + var(--safe-top)) 20px calc(20px + var(--safe-bottom))}
+.ob-card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:30px 24px;width:100%;max-width:480px;box-shadow:var(--sh)}
+.ob-dots{display:flex;gap:6px;margin-bottom:18px}
+.ob-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .3s}
+.ob-dot.act{background:var(--red)}
+.ob-title{font-family:'Shippori Mincho',serif;font-size:22px;margin-bottom:6px}
+.ob-sub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+.ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.ch-btn{padding:14px 10px;border:2px solid var(--border);border-radius:var(--r);background:var(--paper2);font-size:14px;text-align:center;transition:all .15s;color:var(--ink);line-height:1.4}
+.ch-btn:active{border-color:var(--red);background:var(--redl)}
+.ch-btn.sel{border-color:var(--red);background:var(--redl);font-weight:500;color:var(--redd)}
+.ch-icon{font-size:24px;display:block;margin-bottom:5px}
+.ob-next{width:100%;padding:14px;background:var(--red);color:#fff;border-radius:50px;font-size:16px;font-weight:600;transition:background .15s}
+.ob-next:active{background:var(--redd)}
+.ob-next:disabled{background:var(--paper3);color:var(--muted)}
+
+/* ── DIAGNOSTIC ──────────────────────────────── */
+#s-diag{background:var(--paper);padding:calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom))}
+.dg-wrap{max-width:580px;width:100%;margin:0 auto}
+.dg-hd{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.dg-title{font-family:'Shippori Mincho',serif;font-size:18px;white-space:nowrap}
+.dg-bar{flex:1;background:var(--paper3);border-radius:4px;height:7px;overflow:hidden}
+.dg-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:4px;transition:width .4s}
+.dg-ct{font-size:12px;color:var(--muted);white-space:nowrap}
+.dg-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:12px}
+.dg-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.dg-q{font-family:'Shippori Mincho',serif;font-size:clamp(20px,5vw,26px);line-height:1.5}
+.dg-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dopt{padding:12px 12px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--paper2);font-size:14px;text-align:left;display:flex;align-items:center;gap:8px;transition:all .15s;color:var(--ink)}
+.dopt:active:not(.lk){border-color:var(--ink);background:var(--paper3)}
+.dopt.ok{background:var(--greenl);border-color:var(--green);color:var(--green)}
+.dopt.ng{background:var(--redl);border-color:var(--red);color:var(--redd)}
+.dopt.rv{background:var(--greenl);border-color:var(--green);color:var(--green)}
+.ol{width:24px;height:24px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.dopt.ok .ol{background:var(--green);color:#fff}
+.dopt.ng .ol,.dopt.rv .ol{background:var(--red);color:#fff}
+.dopt.rv .ol{background:var(--green);color:#fff}
+.dg-ex{background:var(--ink);color:rgba(255,255,255,.85);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.7;margin-top:10px;display:none}
+.dg-ex.on{display:block}
+.dg-ex strong{color:var(--gold)}
+.dg-next{margin-top:12px;width:100%;padding:13px;background:var(--red);color:#fff;border-radius:50px;font-size:15px;font-weight:600;display:none}
+.dg-next:active{background:var(--redd)}
+
+/* ── DIAG RESULT ─────────────────────────────── */
+#s-dr{background:var(--paper);align-items:center;justify-content:center;padding:calc(24px + var(--safe-top)) 20px calc(24px + var(--safe-bottom))}
+.dr-card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:36px 28px;max-width:420px;width:100%;text-align:center;box-shadow:var(--sh)}
+.dr-em{font-size:58px;margin-bottom:10px}
+.dr-ti{font-family:'Shippori Mincho',serif;font-size:22px;margin-bottom:8px}
+.dr-badge{display:inline-block;padding:6px 20px;border-radius:50px;font-size:14px;font-weight:600;margin-bottom:16px}
+.lv-init{background:var(--redl);color:var(--redd)}
+.lv-basic{background:var(--goldl);color:var(--goldd)}
+.lv-inter{background:var(--greenl);color:var(--green)}
+.dr-sub{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px}
+.dr-btn{width:100%;padding:14px;background:var(--red);color:#fff;border-radius:50px;font-size:16px;font-weight:600}
+.dr-btn:active{background:var(--redd)}
+
+/* ── APP SHELL ───────────────────────────────── */
+#s-app{background:var(--paper)}
+.app-body{
+  position:fixed;
+  top:0;left:0;right:0;
+  bottom:calc(var(--nav-h) + var(--safe-bottom));
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+/* Bottom nav */
+.bottom-nav{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  height:calc(var(--nav-h) + var(--safe-bottom));
+  background:#fff;
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:flex-start;
+  padding-bottom:var(--safe-bottom);
+  z-index:50;
+}
+.nb{
+  flex:1;height:var(--nav-h);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;background:transparent;color:var(--muted);font-size:20px;
+  transition:color .15s;
+}
+.nb.on{color:var(--red)}
+.nb span{font-size:10px;font-family:'DM Sans',sans-serif;letter-spacing:.02em;font-weight:500}
+.nb.hidden{display:none}
+/* More menu */
+.more-panel{
+  position:fixed;bottom:calc(var(--nav-h) + var(--safe-bottom));left:0;right:0;
+  background:#fff;border-top:1px solid var(--border);
+  padding:16px;border-radius:20px 20px 0 0;
+  box-shadow:0 -8px 32px rgba(0,0,0,.12);
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  z-index:49;
+}
+.more-panel.open{transform:none}
+.more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.more-btn{padding:14px 8px;border-radius:14px;background:var(--paper2);display:flex;flex-direction:column;align-items:center;gap:5px;font-size:13px;color:var(--ink);font-weight:500;border:none;transition:background .15s}
+.more-btn:active{background:var(--paper3)}
+.more-btn .ico{font-size:22px}
+.more-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:48;display:none}
+.more-overlay.open{display:block}
+
+/* Pages */
+.pg{display:none;min-height:100%;padding:calc(16px + var(--safe-top)) 16px 16px;animation:fu .2s ease}
+.pg.on{display:block}
+.pg-hd{margin-bottom:20px}
+.pg-hd h1{font-family:'Shippori Mincho',serif;font-size:22px;margin-bottom:3px}
+.pg-hd p{font-size:13px;color:var(--muted)}
+
+/* ── DASHBOARD ──────────────────────────────── */
+.dash-banner{background:var(--ink);border-radius:18px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden}
+.dash-banner::before{content:attr(data-bg);position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-family:'Shippori Mincho',serif;font-size:90px;color:rgba(255,255,255,.05);line-height:1;pointer-events:none}
+.db-greet{font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.db-name{font-family:'Shippori Mincho',serif;font-size:20px;color:#fff;margin-bottom:16px}
+.db-bar-row{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.38);margin-bottom:6px}
+.db-bar-row b{color:var(--gold)}
+.db-bar{background:rgba(255,255,255,.1);border-radius:5px;height:8px;overflow:hidden;margin-bottom:16px}
+.db-bar-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:5px;transition:width .6s}
+.db-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.db-stat strong{display:block;font-size:18px;font-weight:600;color:#fff}
+.db-stat span{font-size:11px;color:rgba(255,255,255,.33)}
+.stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.stat-chip{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.sc-icon{font-size:18px;margin-bottom:4px}
+.sc-val{font-size:18px;font-weight:600}
+.sc-val span{font-size:11px;color:var(--muted);font-weight:400}
+.sc-lbl{font-size:11px;color:var(--muted);margin-top:1px}
+.task-box{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px 18px}
+.sec-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:10px}
+.task{display:flex;align-items:center;gap:10px;padding:11px 12px;background:var(--paper2);border-radius:10px;margin-bottom:8px;border:1px solid transparent;transition:background .15s}
+.task:active{background:var(--paper3)}
+.tchk{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+.task.done .tchk{background:var(--green);border-color:var(--green);color:#fff}
+.tinfo{flex:1}
+.ttitle{font-size:13px;font-weight:500}
+.tsub{font-size:11px;color:var(--muted)}
+.txp{font-size:11px;color:var(--gold);font-weight:500}
+.tgo{padding:7px 14px;background:var(--red);color:#fff;border-radius:50px;font-size:12px;font-weight:600}
+.tgo:active{background:var(--redd)}
+
+/* ── PATH ──────────────────────────────────── */
+.path-wrap{max-width:340px;margin:0 auto;padding:8px 0}
+.punit{margin-bottom:24px}
+.punit-hd{text-align:center;margin-bottom:14px}
+.punit-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:50px;font-size:13px;font-weight:600}
+.punit-name{font-size:11px;color:var(--muted);margin-top:3px}
+.p-nodes{display:flex;flex-direction:column;align-items:center}
+.p-node{display:flex;flex-direction:column;align-items:center}
+.p-conn{width:3px;height:22px;background:var(--border)}
+.p-conn.dn{background:var(--green)}
+.l-btn{width:68px;height:68px;border-radius:50%;border:4px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px;transition:all .15s;position:relative}
+.l-btn span{font-size:9px;font-weight:600;margin-top:1px}
+.l-done{background:var(--green);border-color:#155a30;color:#fff;box-shadow:0 4px 0 #155a30}
+.l-act{background:var(--red);border-color:var(--redd);color:#fff;box-shadow:0 4px 0 var(--redd);animation:pulse 2s infinite}
+.l-lock{background:var(--paper3);border-color:var(--border);color:var(--muted)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.l-act:active{transform:scale(.96)}
+.l-lkico{position:absolute;top:-2px;right:-2px;width:18px;height:18px;background:var(--muted);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff}
+.l-name{font-size:10px;color:var(--muted);margin-top:3px;text-align:center;max-width:80px}
+
+/* ── MODAL (lesson) ─────────────────────────── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.overlay.on{display:flex}
+.modal{
+  background:var(--paper);
+  border-radius:24px 24px 0 0;
+  width:100%;max-width:600px;
+  max-height:92vh;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  box-shadow:var(--sh-lg);
+  padding-bottom:var(--safe-bottom);
+  animation:slideUp .3s cubic-bezier(.4,0,.2,1);
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
+.modal-top{background:var(--ink);padding:16px 18px;border-radius:24px 24px 0 0;display:flex;align-items:center;justify-content:space-between}
+.modal-info{color:#fff}
+.modal-sec{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:2px}
+.modal-name{font-family:'Shippori Mincho',serif;font-size:17px}
+.modal-x{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center}
+.modal-x:active{background:rgba(255,255,255,.2)}
+.modal-body{padding:20px 18px 24px}
+.m-lives{display:flex;gap:4px;margin-bottom:14px}
+.hrt{font-size:18px;transition:transform .3s}
+.hrt.lost{opacity:.18;transform:scale(.8)}
+.m-prog{background:var(--paper3);border-radius:4px;height:6px;overflow:hidden;margin-bottom:18px}
+.m-prog-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:4px;transition:width .4s}
+.lq-ctx{font-size:13px;color:var(--muted);margin-bottom:8px}
+.lq-text{font-family:'Shippori Mincho',serif;font-size:clamp(20px,5vw,26px);line-height:1.6;margin-bottom:12px}
+.l-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.lopt{padding:12px 12px;border:2px solid var(--border);border-radius:var(--r);background:#fff;font-size:14px;text-align:left;display:flex;align-items:center;gap:8px;transition:all .15s;color:var(--ink)}
+.lopt:active:not(.lk){border-color:var(--blue);background:var(--bluel)}
+.lopt.ok{background:var(--greenl);border-color:var(--green);color:var(--green)}
+.lopt.ng{background:var(--redl);border-color:var(--red);color:var(--redd)}
+.lopt.rv{background:var(--greenl);border-color:var(--green);color:var(--green)}
+.l-ex{background:var(--ink);color:rgba(255,255,255,.85);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.7;margin-bottom:12px;display:none}
+.l-ex.on{display:block}
+.l-ex strong{color:var(--gold)}
+.l-next{width:100%;padding:13px;background:var(--red);color:#fff;border-radius:50px;font-size:16px;font-weight:600;display:none}
+.l-next:active{background:var(--redd)}
+.lc{text-align:center;padding:12px 0}
+.lc-ico{font-size:60px;margin-bottom:8px;animation:bounce .5s ease}
+@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.lc-title{font-family:'Shippori Mincho',serif;font-size:22px;margin-bottom:6px}
+.lc-sub{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6}
+.lc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.lc-s{background:var(--paper2);border-radius:10px;padding:12px;text-align:center}
+.lc-sv{font-size:20px;font-weight:600}
+.lc-sl{font-size:11px;color:var(--muted);margin-top:2px}
+.lc-btn{width:100%;padding:13px;background:var(--red);color:#fff;border-radius:50px;font-size:16px;font-weight:600}
+.lc-btn:active{background:var(--redd)}
+
+/* ── KANA ──────────────────────────────────── */
+.kana-tabs{display:flex;gap:8px;margin-bottom:14px}
+.kana-tab{flex:1;padding:9px 10px;border-radius:50px;border:1.5px solid var(--border);background:var(--paper2);font-size:13px;text-align:center;color:var(--ink);font-weight:400;transition:all .15s}
+.kana-tab.on{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:500}
+.kana-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:7px;margin-bottom:16px}
+.kana-chip{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:10px 5px;text-align:center;cursor:pointer;transition:all .15s}
+.kana-chip:active{border-color:var(--red);background:var(--redl);transform:scale(.95)}
+.kana-chip.sel{border-color:var(--red);background:var(--redl)}
+.kc{font-family:'Shippori Mincho',serif;font-size:24px;line-height:1}
+.kr{font-size:10px;color:var(--muted);margin-top:3px}
+/* Kana detail card */
+.kana-detail-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;text-align:center;box-shadow:var(--sh);margin-bottom:16px}
+.kdc-char{font-family:'Shippori Mincho',serif;font-size:80px;color:var(--ink);line-height:1;margin-bottom:6px}
+.kdc-rom{font-size:20px;color:var(--red);font-weight:500;margin-bottom:4px}
+.kdc-ex{font-size:13px;color:var(--muted);margin-bottom:14px}
+.kdc-close{padding:8px 22px;border:1.5px solid var(--border);border-radius:50px;background:var(--paper2);font-size:14px}
+.kdc-close:active{background:var(--paper3)}
+/* Writing canvas */
+.write-panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:var(--sh);margin-bottom:16px}
+.write-ref-row{display:flex;align-items:center;gap:16px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.wref-char{font-family:'Shippori Mincho',serif;font-size:64px;color:var(--ink);line-height:1}
+.wref-info{flex:1}
+.wref-rom{font-size:18px;color:var(--red);font-weight:500;margin-bottom:2px}
+.wref-ex{font-size:12px;color:var(--muted);line-height:1.5}
+.write-hint{font-size:13px;color:var(--muted);text-align:center;margin-bottom:10px}
+.w-canvas{border:2px dashed var(--border);border-radius:12px;background:var(--paper2);touch-action:none;display:block;width:100%;max-width:260px;margin:0 auto}
+.w-canvas.active{border-color:var(--ink);border-style:solid}
+.write-btns{display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap}
+.wb{padding:10px 18px;border-radius:50px;font-size:14px;font-weight:500;transition:all .15s}
+.wb:active{transform:scale(.96)}
+.wb-clear{background:var(--paper3);color:var(--ink);border:1px solid var(--border)}
+.wb-ok{background:var(--green);color:#fff}
+.wb-ok:disabled{background:var(--border);color:var(--muted)}
+.wb-retry{background:var(--redl);color:var(--redd);border:1px solid var(--border)}
+.write-fb{font-size:14px;font-weight:500;min-height:22px;text-align:center;margin-top:10px}
+.write-fb.ok{color:var(--green)}
+.write-fb.ng{color:var(--redd)}
+
+/* ── VOCAB ─────────────────────────────────── */
+.vf-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.vf-scroll::-webkit-scrollbar{display:none}
+.vf{padding:7px 14px;border-radius:50px;border:1.5px solid var(--border);background:var(--paper2);font-size:13px;white-space:nowrap;color:var(--ink);flex-shrink:0}
+.vf.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.v-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.v-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:13px}
+.vw{font-family:'Shippori Mincho',serif;font-size:22px;margin-bottom:2px}
+.vr{font-size:11px;color:var(--red);margin-bottom:4px}
+.vm{font-size:13px;color:var(--muted)}
+.vt{margin-top:6px;font-size:10px;padding:2px 8px;border-radius:50px;background:var(--paper3);color:var(--muted);display:inline-block}
+
+/* ── SIMULADO ───────────────────────────────── */
+.sim-hero{background:var(--ink);border-radius:16px;padding:22px;color:#fff;margin-bottom:16px;position:relative;overflow:hidden}
+.sim-hero::after{content:'試';position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:'Shippori Mincho',serif;font-size:90px;color:rgba(255,255,255,.04);line-height:1;pointer-events:none}
+.sim-secs{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.sim-s{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:14px;display:flex;align-items:center;gap:12px}
+.sim-s-ico{font-size:22px;flex-shrink:0}
+.sim-s-ti{font-size:14px;font-weight:500;margin-bottom:2px}
+.sim-s-meta{font-size:12px;color:var(--muted)}
+.stag{font-size:11px;padding:2px 8px;border-radius:50px;font-weight:500;margin-left:auto;flex-shrink:0}
+.tg{background:var(--greenl);color:var(--green)}
+.ty{background:var(--goldl);color:var(--goldd)}
+.tr{background:var(--redl);color:var(--redd)}
+.sim-start{width:100%;padding:15px;background:var(--red);color:#fff;border-radius:50px;font-size:16px;font-weight:600;letter-spacing:.02em}
+.sim-start:active{background:var(--redd)}
+.sim-run-hd{background:var(--ink);border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;color:#fff}
+.sim-timer{font-size:22px;font-weight:600;color:var(--gold);font-variant-numeric:tabular-nums}
+.sim-timer.urg{color:var(--red);animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.sim-sec-lbl{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em}
+.sim-sec-nm{font-size:14px;font-weight:500}
+.dialog-box{background:var(--bluel);border:1px solid #b3d4f5;border-radius:12px;padding:14px 16px;margin-bottom:12px;line-height:1.85}
+.dialog-box .djp{font-family:'Shippori Mincho',serif;font-size:16px;color:var(--ink)}
+.dialog-box .dro{font-size:12px;color:var(--muted);margin-top:1px}
+.dialog-spk{font-weight:600;color:var(--blue);font-size:12px;margin-bottom:2px}
+/* Result */
+.res-hero{background:var(--ink);border-radius:16px;padding:28px 22px;color:#fff;text-align:center;margin-bottom:14px}
+.res-jp{font-family:'Shippori Mincho',serif;font-size:48px;color:var(--gold);margin-bottom:6px}
+.res-score{font-size:18px;font-weight:500;margin-bottom:4px}
+.res-sub{font-size:13px;color:rgba(255,255,255,.4);line-height:1.5}
+.res-secs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}
+.rs{background:rgba(255,255,255,.06);border-radius:10px;padding:13px;text-align:center}
+.rsnm{font-size:10px;color:rgba(255,255,255,.3);margin-bottom:4px}
+.rsv{font-size:20px;font-weight:600}
+.rsmx{font-size:11px;color:rgba(255,255,255,.28)}
+.rsp .rsv{color:#5DCAA5}
+.rsf .rsv{color:var(--red)}
+
+/* ── PROGRESSO ───────────────────────────────── */
+.ready-card{background:var(--ink);border-radius:16px;padding:22px;color:#fff;margin-bottom:16px}
+.ready-top{display:flex;align-items:center;gap:16px;margin-bottom:10px}
+.ready-pct{font-family:'Shippori Mincho',serif;font-size:48px;line-height:1;color:var(--gold)}
+.ready-info h3{font-size:14px;font-weight:500;margin-bottom:3px}
+.ready-info p{font-size:12px;color:rgba(255,255,255,.4);line-height:1.5}
+.ready-badge{display:inline-block;margin-top:8px;background:rgba(230,168,23,.18);color:var(--gold);border:1px solid rgba(230,168,23,.28);padding:4px 12px;border-radius:50px;font-size:11px;font-weight:500}
+.prog-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.prog-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px}
+.pc-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.pc-ico{font-size:18px}
+.pc-ti{font-size:13px;font-weight:500;flex:1}
+.pc-pct{font-size:15px;font-weight:600;color:var(--red)}
+.p-bar{background:var(--paper3);border-radius:4px;height:6px;overflow:hidden;margin-bottom:6px}
+.p-bar-fill{height:100%;border-radius:4px;transition:width .6s}
+.fr{background:linear-gradient(90deg,var(--red),#ff7f50)}
+.fg{background:linear-gradient(90deg,var(--green),#56cf9b)}
+.fy{background:linear-gradient(90deg,var(--gold),#ffcc44)}
+.fb{background:linear-gradient(90deg,var(--blue),#5ea0e8)}
+.pc-det{font-size:11px;color:var(--muted)}
+.hist-box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px}
+.hist-row{display:flex;align-items:center;gap:10px;padding:10px;background:var(--paper2);border-radius:9px;margin-bottom:7px}
+.hd{font-size:11px;color:var(--muted);min-width:40px}
+.ht{flex:1;font-size:13px;font-weight:500}
+.hs{font-size:13px;font-weight:600}
+.hb{font-size:10px;padding:2px 8px;border-radius:50px;font-weight:500}
+.hbp{background:var(--greenl);color:var(--green)}
+.hby{background:var(--goldl);color:var(--goldd)}
+.hbn{background:var(--redl);color:var(--redd)}
+
+/* ── CONQUISTAS ──────────────────────────────── */
+.ach-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.ach{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
+.ach.lk{opacity:.3;filter:grayscale(1)}
+.ach-ico{font-size:30px;margin-bottom:7px}
+.ach-nm{font-size:13px;font-weight:600;margin-bottom:3px}
+.ach-dc{font-size:11px;color:var(--muted);line-height:1.5}
+.ach-xp{margin-top:6px;font-size:11px;color:var(--gold);font-weight:500}
+
+/* ── PROFILE PAGE ────────────────────────────── */
+.profile-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px}
+.prof-avatar-lg{width:64px;height:64px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;color:#fff;margin:0 auto 12px}
+.prof-name-lg{font-family:'Shippori Mincho',serif;font-size:20px;text-align:center;margin-bottom:4px}
+.prof-meta{font-size:13px;color:var(--muted);text-align:center;margin-bottom:16px}
+.prof-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.pstat{background:var(--paper2);border-radius:10px;padding:12px;text-align:center}
+.pstat-v{font-size:20px;font-weight:600}
+.pstat-l{font-size:11px;color:var(--muted)}
+.switch-btn{width:100%;padding:13px;background:var(--paper2);color:var(--ink);border-radius:50px;font-size:15px;font-weight:500;border:1.5px solid var(--border)}
+.switch-btn:active{background:var(--paper3)}
+.danger-btn{width:100%;padding:13px;background:var(--redl);color:var(--redd);border-radius:50px;font-size:15px;font-weight:500;margin-top:8px;border:1.5px solid var(--border)}
+.danger-btn:active{background:#fdd}
+
+/* ── XP BAR (top of app) ─────────────────────── */
+.xp-topbar{
+  position:sticky;top:0;left:0;right:0;
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:calc(8px + var(--safe-top)) 16px 8px;
+  display:flex;align-items:center;gap:12px;
+  z-index:20;
+}
+.xp-streak{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:var(--gold)}
+.xp-bar-wrap{flex:1;background:var(--paper3);border-radius:4px;height:6px;overflow:hidden}
+.xp-bar-inner{height:100%;background:linear-gradient(90deg,var(--gold),#ffcc44);border-radius:4px;transition:width .5s}
+.xp-lv{font-size:13px;font-weight:600;color:var(--ink)}
+
+/* ── TOAST ──────────────────────────────────── */
+.toast{
+  position:fixed;bottom:calc(var(--nav-h) + var(--safe-bottom) + 12px);
+  left:50%;transform:translateX(-50%) translateY(100px);
+  background:var(--ink);color:#fff;
+  padding:11px 18px;border-radius:50px;
+  font-size:14px;white-space:nowrap;
+  opacity:0;transition:all .28s cubic-bezier(.4,0,.2,1);
+  z-index:999;box-shadow:var(--sh-lg);
+}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* Confetti */
+.cf{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:500}
+.cp{position:absolute;width:9px;height:9px;border-radius:2px;animation:cfall linear forwards}
+@keyframes cfall{to{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* ── INSTALL BANNER ──────────────────────────── */
+.install-banner{
+  position:fixed;bottom:calc(var(--nav-h) + var(--safe-bottom) + 8px);
+  left:12px;right:12px;
+  background:var(--ink);color:#fff;
+  border-radius:16px;padding:14px 16px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:var(--sh-lg);z-index:40;
+  transform:translateY(20px);opacity:0;
+  animation:slideFromBottom .4s ease .5s forwards;
+}
+@keyframes slideFromBottom{to{transform:none;opacity:1}}
+.ib-ico{font-size:28px;flex-shrink:0}
+.ib-text{flex:1}
+.ib-title{font-size:14px;font-weight:600}
+.ib-sub{font-size:12px;color:rgba(255,255,255,.5);margin-top:2px}
+.ib-btn{padding:8px 14px;background:var(--red);color:#fff;border-radius:50px;font-size:13px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.ib-btn:active{background:var(--redd)}
+.ib-close{color:rgba(255,255,255,.4);font-size:18px;flex-shrink:0;padding:4px}
+</style>
+</head>
+<body>
+
+<!-- ══ SPLASH / PROFILE SELECT ══════════════════ -->
+<div class="scr on" id="s-splash">
+  <div class="sp-bg">日</div>
+  <div class="sp-logo">日本語マスター</div>
+  <div class="sp-tag">Nihongo Master</div>
+  <div class="sp-card">
+    <div class="sp-card-title">Selecione seu perfil ou crie um novo</div>
+    <div class="profile-list" id="profile-list"></div>
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-text">ou novo perfil</div></div>
+    <input class="sp-name-input" id="sp-name" type="text" placeholder="Digite seu nome..." maxlength="30" oninput="checkName()" autocomplete="given-name">
+    <button class="sp-btn" id="sp-btn" disabled onclick="createOrLoadProfile()">Entrar →</button>
+  </div>
+</div>
+
+<!-- ══ ONBOARDING ════════════════════════════════ -->
+<div class="scr" id="s-ob">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:calc(20px + var(--safe-top)) 20px calc(20px + var(--safe-bottom));background:var(--paper)">
+  <div class="ob-card">
+    <div class="ob-dots" id="ob-dots"></div>
+    <div class="ob-title" id="ob-title"></div>
+    <div class="ob-sub" id="ob-sub"></div>
+    <div id="ob-content"></div>
+    <button class="ob-next" id="ob-next" disabled onclick="obNext()">Continuar →</button>
+  </div>
+  </div>
+</div>
+
+<!-- ══ DIAGNOSTIC ════════════════════════════════ -->
+<div class="scr" id="s-diag">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom));background:var(--paper)">
+  <div class="dg-wrap">
+    <div class="dg-hd">
+      <div class="dg-title">Diagnóstico</div>
+      <div class="dg-bar"><div class="dg-fill" id="dg-fill" style="width:0%"></div></div>
+      <div class="dg-ct" id="dg-ct">1/10</div>
+    </div>
+    <div class="dg-card">
+      <div class="dg-lbl" id="dg-lbl"></div>
+      <div class="dg-q" id="dg-q"></div>
+    </div>
+    <div class="dg-opts" id="dg-opts"></div>
+    <div class="dg-ex" id="dg-ex"></div>
+    <button class="dg-next" id="dg-next" onclick="diagNext()">Próxima →</button>
+  </div>
+  </div>
+</div>
+
+<!-- ══ DIAG RESULT ═══════════════════════════════ -->
+<div class="scr" id="s-dr">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:calc(24px + var(--safe-top)) 20px calc(24px + var(--safe-bottom));background:var(--paper)">
+  <div class="dr-card">
+    <div class="dr-em" id="dr-em">🎌</div>
+    <div class="dr-ti" id="dr-ti"></div>
+    <div class="dr-badge" id="dr-badge"></div>
+    <div class="dr-sub" id="dr-sub"></div>
+    <button class="dr-btn" onclick="launchApp()">Começar minha jornada →</button>
+  </div>
+  </div>
+</div>
+
+<!-- ══ APP ═══════════════════════════════════════ -->
+<div class="scr" id="s-app">
+  <!-- XP top bar -->
+  <div class="xp-topbar" id="xp-topbar">
+    <div class="xp-streak">🔥<span id="sl-streak">0</span></div>
+    <div class="xp-bar-wrap"><div class="xp-bar-inner" id="xp-bar" style="width:0%"></div></div>
+    <div class="xp-lv">Nv.<span id="xp-lv">1</span></div>
+  </div>
+
+  <!-- Scrollable content -->
+  <div class="app-body">
+    <!-- HOME -->
+    <div class="pg on" id="pg-home">
+      <div class="pg-hd"><h1 id="home-h1">Olá!</h1><p>Continue de onde parou.</p></div>
+      <div class="dash-banner" id="dash-banner" data-bg="学">
+        <div class="db-greet">NIHONGO MASTER</div>
+        <div class="db-name" id="db-name">Bem-vindo!</div>
+        <div class="db-bar-row"><span>Progresso geral</span><b id="db-pct">0%</b></div>
+        <div class="db-bar"><div class="db-bar-fill" id="db-bar-fill" style="width:0%"></div></div>
+        <div class="db-stats">
+          <div class="db-stat"><strong id="ds-streak">0</strong><span>🔥 dias</span></div>
+          <div class="db-stat"><strong id="ds-xp">0</strong><span>⚡ XP</span></div>
+          <div class="db-stat" id="ds-prova-wrap" style="display:none"><strong id="ds-prova">—</strong><span>📅 dias p/ prova</span></div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-chip"><div class="sc-icon">あ</div><div class="sc-val" id="sc-hira">0<span>/46</span></div><div class="sc-lbl">Hiragana</div></div>
+        <div class="stat-chip"><div class="sc-icon">ア</div><div class="sc-val" id="sc-kata">0<span>/46</span></div><div class="sc-lbl">Katakana</div></div>
+        <div class="stat-chip"><div class="sc-icon">漢</div><div class="sc-val" id="sc-kanji">0<span>/100</span></div><div class="sc-lbl">Kanji</div></div>
+        <div class="stat-chip"><div class="sc-icon">語</div><div class="sc-val" id="sc-vocab">0<span>/800</span></div><div class="sc-lbl">Vocabulário</div></div>
+      </div>
+      <div class="task-box">
+        <div class="sec-lbl">Continue de onde parou</div>
+        <div id="task-list"></div>
+      </div>
+    </div>
+
+    <!-- TRILHA -->
+    <div class="pg" id="pg-path">
+      <div class="pg-hd"><h1>Trilha</h1><p>Conclua cada etapa para avançar.</p></div>
+      <div class="path-wrap" id="path-wrap"></div>
+    </div>
+
+    <!-- HIRAGANA -->
+    <div class="pg" id="pg-hira">
+      <div class="pg-hd"><h1>Hiragana · ひらがな</h1></div>
+      <div class="kana-tabs">
+        <button class="kana-tab on" onclick="setKanaTab('hira','study',this)">📖 Estudo</button>
+        <button class="kana-tab" onclick="setKanaTab('hira','write',this)">✍️ Escrita</button>
+      </div>
+      <div id="hira-study-sec"><div class="kana-grid" id="hira-grid"></div><div id="hira-det"></div></div>
+      <div id="hira-write-sec" style="display:none"><div class="kana-grid" id="hira-wgrid"></div><div id="hira-wdet"></div></div>
+    </div>
+
+    <!-- KATAKANA -->
+    <div class="pg" id="pg-kata">
+      <div class="pg-hd"><h1>Katakana · カタカナ</h1></div>
+      <div class="kana-tabs">
+        <button class="kana-tab on" onclick="setKanaTab('kata','study',this)">📖 Estudo</button>
+        <button class="kana-tab" onclick="setKanaTab('kata','write',this)">✍️ Escrita</button>
+      </div>
+      <div id="kata-study-sec"><div class="kana-grid" id="kata-grid"></div><div id="kata-det"></div></div>
+      <div id="kata-write-sec" style="display:none"><div class="kana-grid" id="kata-wgrid"></div><div id="kata-wdet"></div></div>
+    </div>
+
+    <!-- VOCAB -->
+    <div class="pg" id="pg-vocab">
+      <div class="pg-hd"><h1>Vocabulário</h1></div>
+      <div class="vf-scroll" id="vf-row"></div>
+      <div class="v-grid" id="v-grid"></div>
+    </div>
+
+    <!-- SIMULADO -->
+    <div class="pg" id="pg-sim">
+      <div class="pg-hd"><h1>Simulado · N5</h1><p>Formato oficial cronometrado.</p></div>
+      <div id="sim-setup">
+        <div class="sim-hero">
+          <div style="font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Simulado Completo</div>
+          <div style="font-family:'Shippori Mincho',serif;font-size:22px;color:#fff;margin-bottom:4px">日本語能力試験 N5</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.4)">3 seções · 105 min · 180 pts · Mín: 80 pts</div>
+        </div>
+        <div class="sim-secs">
+          <div class="sim-s"><div class="sim-s-ico">📝</div><div><div class="sim-s-ti">Vocabulário</div><div class="sim-s-meta">語彙 · 10 questões · 25 min</div></div><span class="stag ty">Mod.</span></div>
+          <div class="sim-s"><div class="sim-s-ico">文</div><div><div class="sim-s-ti">Gramática & Leitura</div><div class="sim-s-meta">文法・読解 · 10 questões · 50 min</div></div><span class="stag tr">Difíc.</span></div>
+          <div class="sim-s"><div class="sim-s-ico">🎧</div><div><div class="sim-s-ti">Auditiva</div><div class="sim-s-meta">聴解 · 8 diálogos · 30 min</div></div><span class="stag tg">Conv.</span></div>
+        </div>
+        <button class="sim-start" onclick="startSim()">Iniciar Simulado →</button>
+      </div>
+      <div id="sim-run" style="display:none"></div>
+      <div id="sim-res" style="display:none"></div>
+    </div>
+
+    <!-- PROGRESSO -->
+    <div class="pg" id="pg-prog">
+      <div class="pg-hd"><h1>Progresso</h1></div>
+      <div id="prog-ready-wrap"></div>
+      <div class="prog-grid">
+        <div class="prog-card"><div class="pc-hd"><div class="pc-ico">あア</div><div class="pc-ti">Silabários</div><div class="pc-pct" id="pp-sil">0%</div></div><div class="p-bar"><div class="p-bar-fill fg" id="pb-sil" style="width:0%"></div></div><div class="pc-det" id="pd-sil">Hira 0% · Kata 0%</div></div>
+        <div class="prog-card"><div class="pc-hd"><div class="pc-ico">漢</div><div class="pc-ti">Kanji</div><div class="pc-pct" id="pp-kanji">0%</div></div><div class="p-bar"><div class="p-bar-fill fr" id="pb-kanji" style="width:0%"></div></div><div class="pc-det" id="pd-kanji">0/100</div></div>
+        <div class="prog-card"><div class="pc-hd"><div class="pc-ico">語</div><div class="pc-ti">Vocabulário</div><div class="pc-pct" id="pp-vocab">0%</div></div><div class="p-bar"><div class="p-bar-fill fy" id="pb-vocab" style="width:0%"></div></div><div class="pc-det" id="pd-vocab">0/800</div></div>
+        <div class="prog-card"><div class="pc-hd"><div class="pc-ico">文</div><div class="pc-ti">Gramática</div><div class="pc-pct" id="pp-gram">0%</div></div><div class="p-bar"><div class="p-bar-fill fb" id="pb-gram" style="width:0%"></div></div><div class="pc-det" id="pd-gram">0/50</div></div>
+      </div>
+      <div class="hist-box">
+        <div class="sec-lbl">Histórico de simulados</div>
+        <div id="hist-list"><div style="font-size:14px;color:var(--muted);padding:8px">Nenhum simulado ainda.</div></div>
+      </div>
+    </div>
+
+    <!-- CONQUISTAS -->
+    <div class="pg" id="pg-ach">
+      <div class="pg-hd"><h1>Conquistas</h1></div>
+      <div class="ach-grid" id="ach-grid"></div>
+    </div>
+
+    <!-- PERFIL -->
+    <div class="pg" id="pg-profile">
+      <div class="pg-hd"><h1>Perfil</h1></div>
+      <div id="profile-page-content"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nb on" id="nb-home" onclick="showPg('home')">🏠<span>Início</span></button>
+    <button class="nb" id="nb-path" onclick="showPg('path')">🗺️<span>Trilha</span></button>
+    <button class="nb" id="nb-sim" onclick="showPg('sim')">📋<span>Prova</span></button>
+    <button class="nb" id="nb-prog" onclick="showPg('prog')">📊<span>Progresso</span></button>
+    <button class="nb" id="nb-more" onclick="toggleMore()">☰<span>Mais</span></button>
+  </nav>
+
+  <!-- More Menu Panel -->
+  <div class="more-overlay" id="more-overlay" onclick="closeMore()"></div>
+  <div class="more-panel" id="more-panel">
+    <div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:12px;letter-spacing:.08em;text-transform:uppercase">Estudar</div>
+    <div class="more-grid">
+      <button class="more-btn" onclick="closeMore();showPg('hira')"><span class="ico">あ</span>Hiragana</button>
+      <button class="more-btn" onclick="closeMore();showPg('kata')"><span class="ico">ア</span>Katakana</button>
+      <button class="more-btn" onclick="closeMore();showPg('vocab')"><span class="ico">語</span>Vocabulário</button>
+      <button class="more-btn" onclick="closeMore();showPg('ach')"><span class="ico">⭐</span>Conquistas</button>
+      <button class="more-btn" onclick="closeMore();showPg('profile')"><span class="ico">👤</span>Perfil</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lesson Modal (bottom sheet) -->
+<div class="overlay" id="l-overlay">
+  <div class="modal">
+    <div class="modal-top">
+      <div class="modal-info"><div class="modal-sec" id="ml-sec"></div><div class="modal-name" id="ml-nm"></div></div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="m-lives" id="ml-lives"></div>
+      <div class="m-prog"><div class="m-prog-fill" id="ml-prog" style="width:0%"></div></div>
+      <div id="ml-body"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toast-msg"></span></div>
+<div class="cf" id="cf"></div>
+
+<script>
+// ══════════════════════════════════════════════
+// DATA (same as v4)
+// ══════════════════════════════════════════════
+const HIRA=[
+  {c:'あ',r:'a',ex:'あめ = chuva'},{c:'い',r:'i',ex:'いぬ = cachorro'},{c:'う',r:'u',ex:'うみ = mar'},{c:'え',r:'e',ex:'えき = estação'},{c:'お',r:'o',ex:'おと = som'},
+  {c:'か',r:'ka',ex:'かさ = guarda-chuva'},{c:'き',r:'ki',ex:'き = árvore'},{c:'く',r:'ku',ex:'くに = país'},{c:'け',r:'ke',ex:'けん = prefeitura'},{c:'こ',r:'ko',ex:'こえ = voz'},
+  {c:'さ',r:'sa',ex:'さかな = peixe'},{c:'し',r:'shi',ex:'しお = sal'},{c:'す',r:'su',ex:'すし = sushi'},{c:'せ',r:'se',ex:'せかい = mundo'},{c:'そ',r:'so',ex:'そら = céu'},
+  {c:'た',r:'ta',ex:'たべる = comer'},{c:'ち',r:'chi',ex:'ちず = mapa'},{c:'つ',r:'tsu',ex:'つき = lua'},{c:'て',r:'te',ex:'てがみ = carta'},{c:'と',r:'to',ex:'とり = pássaro'},
+  {c:'な',r:'na',ex:'なに = o quê'},{c:'に',r:'ni',ex:'にほん = Japão'},{c:'ぬ',r:'nu',ex:'ぬる = pintar'},{c:'ね',r:'ne',ex:'ねこ = gato'},{c:'の',r:'no',ex:'のむ = beber'},
+  {c:'は',r:'ha',ex:'はな = flor'},{c:'ひ',r:'hi',ex:'ひと = pessoa'},{c:'ふ',r:'fu',ex:'ふゆ = inverno'},{c:'へ',r:'he',ex:'へや = quarto'},{c:'ほ',r:'ho',ex:'ほん = livro'},
+  {c:'ま',r:'ma',ex:'まち = cidade'},{c:'み',r:'mi',ex:'みず = água'},{c:'む',r:'mu',ex:'むし = inseto'},{c:'め',r:'me',ex:'め = olho'},{c:'も',r:'mo',ex:'もり = floresta'},
+  {c:'や',r:'ya',ex:'やま = montanha'},{c:'ゆ',r:'yu',ex:'ゆき = neve'},{c:'よ',r:'yo',ex:'よる = noite'},
+  {c:'ら',r:'ra',ex:'らいねん = próximo ano'},{c:'り',r:'ri',ex:'りんご = maçã'},{c:'る',r:'ru',ex:'るす = ausente'},{c:'れ',r:'re',ex:'れんしゅう = prática'},{c:'ろ',r:'ro',ex:'ろく = seis'},
+  {c:'わ',r:'wa',ex:'わたし = eu'},{c:'を',r:'wo',ex:'Partícula de objeto'},{c:'ん',r:'n',ex:'にほん = Japão'},
+];
+const KATA=[
+  {c:'ア',r:'a',ex:'アニメ = anime'},{c:'イ',r:'i',ex:'イタリア = Itália'},{c:'ウ',r:'u',ex:'ウイルス = vírus'},{c:'エ',r:'e',ex:'エアコン = ar-cond.'},{c:'オ',r:'o',ex:'オレンジ = laranja'},
+  {c:'カ',r:'ka',ex:'カメラ = câmera'},{c:'キ',r:'ki',ex:'キロ = quilo'},{c:'ク',r:'ku',ex:'クラス = classe'},{c:'ケ',r:'ke',ex:'ケーキ = bolo'},{c:'コ',r:'ko',ex:'コーヒー = café'},
+  {c:'サ',r:'sa',ex:'サッカー = futebol'},{c:'シ',r:'shi',ex:'シャツ = camisa'},{c:'ス',r:'su',ex:'スポーツ = esporte'},{c:'セ',r:'se',ex:'セーター = suéter'},{c:'ソ',r:'so',ex:'ソファ = sofá'},
+  {c:'タ',r:'ta',ex:'タクシー = táxi'},{c:'チ',r:'chi',ex:'チケット = ingresso'},{c:'ツ',r:'tsu',ex:'ツアー = tour'},{c:'テ',r:'te',ex:'テレビ = TV'},{c:'ト',r:'to',ex:'トマト = tomate'},
+  {c:'ナ',r:'na',ex:'ナイフ = faca'},{c:'ニ',r:'ni',ex:'ニュース = notícias'},{c:'ヌ',r:'nu',ex:'ヌードル = macarrão'},{c:'ネ',r:'ne',ex:'ネクタイ = gravata'},{c:'ノ',r:'no',ex:'ノート = caderno'},
+  {c:'ハ',r:'ha',ex:'ハンバーガー = hambúrguer'},{c:'ヒ',r:'hi',ex:'ヒント = dica'},{c:'フ',r:'fu',ex:'フランス = França'},{c:'ヘ',r:'he',ex:'ヘルメット = capacete'},{c:'ホ',r:'ho',ex:'ホテル = hotel'},
+  {c:'マ',r:'ma',ex:'マンガ = mangá'},{c:'ミ',r:'mi',ex:'ミルク = leite'},{c:'ム',r:'mu',ex:'ムード = clima'},{c:'メ',r:'me',ex:'メニュー = cardápio'},{c:'モ',r:'mo',ex:'モデル = modelo'},
+  {c:'ヤ',r:'ya',ex:'ヤング = jovem'},{c:'ユ',r:'yu',ex:'ユーモア = humor'},{c:'ヨ',r:'yo',ex:'ヨーロッパ = Europa'},
+  {c:'ラ',r:'ra',ex:'ラジオ = rádio'},{c:'リ',r:'ri',ex:'リスト = lista'},{c:'ル',r:'ru',ex:'ルール = regra'},{c:'レ',r:'re',ex:'レストラン = restaurante'},{c:'ロ',r:'ro',ex:'ロボット = robô'},
+  {c:'ワ',r:'wa',ex:'ワイン = vinho'},{c:'ヲ',r:'wo',ex:'Partícula formal'},{c:'ン',r:'n',ex:'パン = pão'},
+];
+const VOCAB_ALL=[
+  {w:'おはよう',r:'ohayou',m:'bom dia',t:'Saudações'},{w:'こんにちは',r:'konnichiwa',m:'boa tarde',t:'Saudações'},{w:'こんばんは',r:'konbanwa',m:'boa noite',t:'Saudações'},{w:'ありがとう',r:'arigatou',m:'obrigado/a',t:'Saudações'},{w:'すみません',r:'sumimasen',m:'com licença',t:'Saudações'},{w:'はじめまして',r:'hajimemashite',m:'prazer',t:'Saudações'},{w:'さようなら',r:'sayounara',m:'tchau',t:'Saudações'},{w:'わかりました',r:'wakarimashita',m:'entendi',t:'Saudações'},
+  {w:'ちち',r:'chichi',m:'meu pai',t:'Família'},{w:'はは',r:'haha',m:'minha mãe',t:'Família'},{w:'あに',r:'ani',m:'irmão mais velho',t:'Família'},{w:'あね',r:'ane',m:'irmã mais velha',t:'Família'},{w:'おとうと',r:'otouto',m:'irmão mais novo',t:'Família'},{w:'いもうと',r:'imouto',m:'irmã mais nova',t:'Família'},{w:'ともだち',r:'tomodachi',m:'amigo/a',t:'Família'},{w:'かぞく',r:'kazoku',m:'família',t:'Família'},
+  {w:'たべる',r:'taberu',m:'comer',t:'Verbos'},{w:'のむ',r:'nomu',m:'beber',t:'Verbos'},{w:'みる',r:'miru',m:'ver',t:'Verbos'},{w:'いく',r:'iku',m:'ir',t:'Verbos'},{w:'くる',r:'kuru',m:'vir',t:'Verbos'},{w:'する',r:'suru',m:'fazer',t:'Verbos'},{w:'かく',r:'kaku',m:'escrever',t:'Verbos'},{w:'よむ',r:'yomu',m:'ler',t:'Verbos'},{w:'きく',r:'kiku',m:'ouvir',t:'Verbos'},{w:'はなす',r:'hanasu',m:'falar',t:'Verbos'},{w:'かえる',r:'kaeru',m:'voltar',t:'Verbos'},{w:'ねる',r:'neru',m:'dormir',t:'Verbos'},
+  {w:'みず',r:'mizu',m:'água',t:'Comida'},{w:'ごはん',r:'gohan',m:'arroz',t:'Comida'},{w:'さかな',r:'sakana',m:'peixe',t:'Comida'},{w:'にく',r:'niku',m:'carne',t:'Comida'},{w:'くだもの',r:'kudamono',m:'fruta',t:'Comida'},{w:'パン',r:'pan',m:'pão',t:'Comida'},{w:'たまご',r:'tamago',m:'ovo',t:'Comida'},{w:'コーヒー',r:'koohii',m:'café',t:'Comida'},{w:'おちゃ',r:'ocha',m:'chá verde',t:'Comida'},{w:'やさい',r:'yasai',m:'verdura',t:'Comida'},
+  {w:'いち',r:'ichi',m:'1',t:'Números'},{w:'に',r:'ni',m:'2',t:'Números'},{w:'さん',r:'san',m:'3',t:'Números'},{w:'し・よん',r:'shi/yon',m:'4',t:'Números'},{w:'ご',r:'go',m:'5',t:'Números'},{w:'ろく',r:'roku',m:'6',t:'Números'},{w:'しち・なな',r:'shichi/nana',m:'7',t:'Números'},{w:'はち',r:'hachi',m:'8',t:'Números'},{w:'く・きゅう',r:'ku/kyuu',m:'9',t:'Números'},{w:'じゅう',r:'juu',m:'10',t:'Números'},
+  {w:'がっこう',r:'gakkō',m:'escola',t:'Lugares'},{w:'うち',r:'uchi',m:'minha casa',t:'Lugares'},{w:'えき',r:'eki',m:'estação',t:'Lugares'},{w:'びょういん',r:'byouin',m:'hospital',t:'Lugares'},{w:'としょかん',r:'toshokan',m:'biblioteca',t:'Lugares'},{w:'こうえん',r:'kōen',m:'parque',t:'Lugares'},{w:'みせ',r:'mise',m:'loja',t:'Lugares'},{w:'レストラン',r:'resutoran',m:'restaurante',t:'Lugares'},
+  {w:'あかい',r:'akai',m:'vermelho',t:'Adjetivos'},{w:'あおい',r:'aoi',m:'azul',t:'Adjetivos'},{w:'しろい',r:'shiroi',m:'branco',t:'Adjetivos'},{w:'くろい',r:'kuroi',m:'preto',t:'Adjetivos'},{w:'おおきい',r:'ookii',m:'grande',t:'Adjetivos'},{w:'ちいさい',r:'chiisai',m:'pequeno',t:'Adjetivos'},{w:'たかい',r:'takai',m:'caro/alto',t:'Adjetivos'},{w:'やすい',r:'yasui',m:'barato',t:'Adjetivos'},{w:'あたらしい',r:'atarashii',m:'novo',t:'Adjetivos'},{w:'ふるい',r:'furui',m:'antigo',t:'Adjetivos'},{w:'むずかしい',r:'muzukashii',m:'difícil',t:'Adjetivos'},{w:'たのしい',r:'tanoshii',m:'divertido',t:'Adjetivos'},
+];
+const Q_BANK=[
+  {t:'grammar',ctx:'Partícula correta:',q:'わたし（ ）がくせいです。',o:['は','を','に','で'],a:0,ex:'<strong>は</strong> = tópico.'},
+  {t:'vocab',ctx:'Significado:',q:'まいにち <u>あさ</u> ごはんをたべます。',o:['noite','tarde','manhã','meio-dia'],a:2,ex:'<strong>あさ</strong> = manhã.'},
+  {t:'grammar',ctx:'Partícula:',q:'としょかん（ ）ほんをよみます。',o:['に','を','で','は'],a:2,ex:'<strong>で</strong> = local de ação.'},
+  {t:'kanji',ctx:'Leitura:',q:'あした <u>山</u> にのぼります。',o:['うみ','やま','かわ','そら'],a:1,ex:'<strong>山 = やま</strong> = montanha.'},
+  {t:'grammar',ctx:'Forma verbal:',q:'きのう なにを（ ）か？',o:['します','して','しました','する'],a:2,ex:'<strong>しました</strong> = passado polido.'},
+  {t:'vocab',ctx:'Significado:',q:'この <u>ほん</u> はおもしろいです。',o:['filme','livro','música','jogo'],a:1,ex:'<strong>ほん</strong> = livro.'},
+  {t:'grammar',ctx:'Pedido polido:',q:'もうすこし ゆっくり（ ）ください。',o:['はなす','はなします','はなして','はなした'],a:2,ex:'<strong>はなして + ください</strong> = pedido polido.'},
+  {t:'kanji',ctx:'Leitura:',q:'わたしの <u>父</u> はいしゃです。',o:['ちち','はは','あに','いもうと'],a:0,ex:'<strong>父 = ちち</strong> = meu pai.'},
+  {t:'grammar',ctx:'Destino:',q:'えき（ ）いきます。',o:['で','に','は','も'],a:1,ex:'<strong>に</strong> = destino.'},
+  {t:'vocab',ctx:'Significado:',q:'<u>でんしゃ</u> でがっこうにいきます。',o:['ônibus','táxi','trem','avião'],a:2,ex:'<strong>でんしゃ</strong> = trem.'},
+  {t:'grammar',ctx:'Partícula dupla:',q:'コーヒー（ ）こうちゃ（ ）すきです。',o:['も…も','は…は','と…と','が…が'],a:0,ex:'<strong>も…も</strong> = tanto…quanto.'},
+  {t:'kanji',ctx:'Leitura:',q:'<u>火曜日</u> にテストがあります。',o:['にちようび','もくようび','すいようび','かようび'],a:3,ex:'<strong>火曜日 = かようび</strong> = terça.'},
+  {t:'vocab',ctx:'Significado:',q:'この <u>かばん</u> はたかいです。',o:['sapato','bolsa','chapéu','óculos'],a:1,ex:'<strong>かばん</strong> = bolsa.'},
+  {t:'grammar',ctx:'Negação:',q:'わたしはさかなが（ ）。',o:['すきです','すきでした','すきではありません','すきじゃない'],a:2,ex:'<strong>すきではありません</strong> = não gosto.'},
+  {t:'kanji',ctx:'Leitura:',q:'<u>水</u> をのみます。',o:['ひ','みず','かね','つち'],a:1,ex:'<strong>水 = みず</strong> = água.'},
+  {t:'grammar',ctx:'Instrumento:',q:'ペン（ ）かきます。',o:['は','を','に','で'],a:3,ex:'<strong>で</strong> = instrumento.'},
+  {t:'vocab',ctx:'Significado:',q:'<u>ともだち</u> とえいがをみました。',o:['família','professor','amigo/a','colega'],a:2,ex:'<strong>ともだち</strong> = amigo/a.'},
+  {t:'grammar',ctx:'Hábito contínuo:',q:'まいにち にほんごを（ ）います。',o:['べんきょう','べんきょうして','べんきょうした','べんきょうします'],a:1,ex:'<strong>べんきょうして + います</strong> = hábito.'},
+  {t:'kanji',ctx:'Leitura:',q:'<u>月曜日</u> はやすみです。',o:['どようび','かようび','げつようび','きんようび'],a:2,ex:'<strong>月曜日 = げつようび</strong> = segunda.'},
+  {t:'vocab',ctx:'Significado:',q:'そとは <u>さむい</u> です。',o:['quente','frio','bonito','largo'],a:1,ex:'<strong>さむい</strong> = frio.'},
+  {t:'grammar',ctx:'Tópico:',q:'あの かた（ ）せんせい です。',o:['を','は','に','で'],a:1,ex:'<strong>は</strong> = tópico.'},
+  {t:'vocab',ctx:'Significado:',q:'<u>あたらしい</u> くるまです。',o:['velho','barato','novo','grande'],a:2,ex:'<strong>あたらしい</strong> = novo.'},
+  {t:'grammar',ctx:'～たい (querer):',q:'がっこうに（ ）たいです。',o:['いく','いき','いって','いった'],a:1,ex:'<strong>いき + たい</strong> = quero ir.'},
+  {t:'kanji',ctx:'Leitura:',q:'<u>日本語</u> がすきです。',o:['にほんご','えいご','ちゅうごくご','かんこくご'],a:0,ex:'<strong>日本語 = にほんご</strong>.'},
+  {t:'vocab',ctx:'Significado:',q:'<u>おおきい</u> いえです。',o:['pequena','nova','grande','cara'],a:2,ex:'<strong>おおきい</strong> = grande.'},
+  {t:'grammar',ctx:'Origem:',q:'にほん（ ）きました。',o:['に','を','で','から'],a:3,ex:'<strong>から</strong> = de (origem).'},
+  {t:'vocab',ctx:'Significado:',q:'<u>やすい</u> ものをかいます。',o:['caro','barato','novo','velho'],a:1,ex:'<strong>やすい</strong> = barato.'},
+  {t:'kanji',ctx:'Leitura:',q:'<u>人</u> がたくさんいます。',o:['ひと','くち','て','め'],a:0,ex:'<strong>人 = ひと</strong> = pessoa.'},
+  {t:'vocab',ctx:'Significado:',q:'<u>むずかしい</u> テストです。',o:['fácil','difícil','interessante','chato'],a:1,ex:'<strong>むずかしい</strong> = difícil.'},
+  {t:'grammar',ctx:'Adversativa:',q:'あめです、（ ）でかけます。',o:['そして','でも','だから','または'],a:1,ex:'<strong>でも</strong> = mas.'},
+  {t:'vocab',ctx:'Significado:',q:'<u>はやい</u> でんしゃです。',o:['lento','bonito','rápido','antigo'],a:2,ex:'<strong>はやい</strong> = rápido.'},
+  {t:'kanji',ctx:'Leitura:',q:'<u>木</u> のしたにいます。',o:['かわ','やま','き','つち'],a:2,ex:'<strong>木 = き</strong> = árvore.'},
+  {t:'grammar',ctx:'Passado:',q:'きのう テレビを（ ）。',o:['みます','みました','みません','みて'],a:1,ex:'<strong>みました</strong> = passado.'},
+  {t:'vocab',ctx:'Significado:',q:'<u>うれしい</u> きもちです。',o:['triste','com medo','feliz','irritado'],a:2,ex:'<strong>うれしい</strong> = feliz.'},
+  {t:'grammar',ctx:'Possessivo:',q:'これはわたし（ ）ほんです。',o:['は','を','の','に'],a:2,ex:'<strong>の</strong> = possessivo.'},
+  {t:'vocab',ctx:'Significado:',q:'<u>いそがしい</u> ひです。',o:['tranquilo','ocupado','longo','frio'],a:1,ex:'<strong>いそがしい</strong> = ocupado.'},
+  {t:'kanji',ctx:'Leitura:',q:'<u>金</u> がありません。',o:['かわ','つち','かね','ひ'],a:2,ex:'<strong>金 = かね</strong> = dinheiro.'},
+  {t:'grammar',ctx:'Existência animada:',q:'ねこが へやに（ ）。',o:['あります','います','です','ました'],a:1,ex:'<strong>います</strong> = animados.'},
+  {t:'vocab',ctx:'Significado:',q:'<u>たのしい</u> りょこうです。',o:['cansativa','divertida','cara','longa'],a:1,ex:'<strong>たのしい</strong> = divertido.'},
+  {t:'grammar',ctx:'Possessivo 2:',q:'やまだ（ ）くるまはあかいです。',o:['は','が','の','で'],a:2,ex:'<strong>の</strong> = possessivo.'},
+];
+const DIAG_QS=[
+  {l:'Silabários',q:'Qual a leitura de「あ」?',o:['ka','sa','a','ta'],a:2,ex:'"あ" = a.'},
+  {l:'Silabários',q:'Qual caractere representa "mi"?',o:['め','み','む','も'],a:1,ex:'"み" = mi.'},
+  {l:'Vocabulário',q:'O que significa "さかな"?',o:['gato','peixe','cachorro','pássaro'],a:1,ex:'"さかな" = peixe.'},
+  {l:'Vocabulário',q:'Como se diz "obrigado"?',o:['すみません','はじめまして','ありがとう','さようなら'],a:2,ex:'"ありがとう" = obrigado.'},
+  {l:'Kanji',q:'Leitura de「山」?',o:['うみ','かわ','やま','そら'],a:2,ex:'"山 = やま" = montanha.'},
+  {l:'Gramática',q:'Partícula de objeto direto?',o:['は','に','を','で'],a:2,ex:'"を" = objeto direto.'},
+  {l:'Gramática',q:'"Vou para a escola":',o:['がっこうでいきます','がっこうにいきます','がっこうをいきます','がっこうはいきます'],a:1,ex:'"に" = destino.'},
+  {l:'Kanji',q:'Leitura de「水曜日」?',o:['もくようび','かようび','すいようび','どようび'],a:2,ex:'"水曜日 = すいようび" = quarta.'},
+  {l:'Gramática',q:'"Li um livro ontem":',o:['ほんをよみます','ほんをよみました','ほんをよみません','ほんをよんで'],a:1,ex:'"よみました" = passado polido.'},
+  {l:'Vocabulário',q:'O que significa「むずかしい」?',o:['fácil','interessante','difícil','divertido'],a:2,ex:'"むずかしい" = difícil.'},
+];
+const SIM_V=[
+  {ctx:'Significado:',q:'この <u>かばん</u> はたかいです。',o:['sapato','bolsa','chapéu','livro'],a:1,ex:'<strong>かばん</strong> = bolsa.'},
+  {ctx:'Significado:',q:'<u>やすい</u> レストランです。',o:['caro','elegante','barato','vazio'],a:2,ex:'<strong>やすい</strong> = barato.'},
+  {ctx:'Significado:',q:'<u>おおきい</u> ねこです。',o:['pequeno','rápido','grande','velho'],a:2,ex:'<strong>おおきい</strong> = grande.'},
+  {ctx:'Leitura:',q:'<u>水曜日</u> にかいぎがあります。',o:['もくようび','かようび','すいようび','どようび'],a:2,ex:'<strong>水曜日 = すいようび</strong> = quarta.'},
+  {ctx:'Significado:',q:'<u>むずかしい</u> しゅくだいです。',o:['fácil','rápido','difícil','novo'],a:2,ex:'<strong>むずかしい</strong> = difícil.'},
+  {ctx:'Leitura:',q:'<u>山</u> がみえます。',o:['かわ','やま','うみ','そら'],a:1,ex:'<strong>山 = やま</strong> = montanha.'},
+  {ctx:'Significado:',q:'<u>あたらしい</u> くつです。',o:['velho','barato','novo','bonito'],a:2,ex:'<strong>あたらしい</strong> = novo.'},
+  {ctx:'Leitura:',q:'<u>父</u> はいしゃです。',o:['はは','ちち','あに','いもうと'],a:1,ex:'<strong>父 = ちち</strong> = meu pai.'},
+  {ctx:'Significado:',q:'<u>はやい</u> くるまです。',o:['lento','caro','velho','rápido'],a:3,ex:'<strong>はやい</strong> = rápido.'},
+  {ctx:'Significado:',q:'<u>たのしい</u> まつりです。',o:['cansativo','triste','divertido','rápido'],a:2,ex:'<strong>たのしい</strong> = divertido.'},
+];
+const SIM_G=[
+  {ctx:'Partícula:',q:'わたし（ ）がくせいです。',o:['を','は','に','で'],a:1,ex:'<strong>は</strong> = tópico.'},
+  {ctx:'Partícula:',q:'としょかん（ ）べんきょうします。',o:['に','を','は','で'],a:3,ex:'<strong>で</strong> = local de ação.'},
+  {ctx:'Destino:',q:'がっこう（ ）いきます。',o:['で','を','に','も'],a:2,ex:'<strong>に</strong> = destino.'},
+  {ctx:'Passado:',q:'きのう えいがを（ ）。',o:['みます','みました','みません','みて'],a:1,ex:'<strong>みました</strong> = passado.'},
+  {ctx:'～たい:',q:'にほんごを（ ）たいです。',o:['べんきょう','べんきょうし','べんきょうして','べんきょうした'],a:1,ex:'<strong>べんきょうし + たい</strong> = quero estudar.'},
+  {ctx:'Instrumento:',q:'ペン（ ）てがみをかきます。',o:['が','に','で','を'],a:2,ex:'<strong>で</strong> = instrumento.'},
+  {ctx:'Negação:',q:'さかなが（ ）。',o:['すきです','すきでした','すきではありません','すきだった'],a:2,ex:'<strong>すきではありません</strong> = não gosto.'},
+  {ctx:'Conjunção:',q:'あめです、（ ）でかけます。',o:['そして','だから','でも','または'],a:2,ex:'<strong>でも</strong> = mas.'},
+  {ctx:'Existência:',q:'つくえのうえにほんが（ ）。',o:['います','あります','です','ありました'],a:1,ex:'<strong>あります</strong> = inanimados.'},
+  {ctx:'Possessivo:',q:'これはやまだ（ ）ほんです。',o:['は','を','の','に'],a:2,ex:'<strong>の</strong> = possessivo.'},
+];
+const SIM_A=[
+  {d:[{s:'A',jp:'すみません、えきはどこですか？',r:'Sumimasen, eki wa doko desu ka?'},{s:'B',jp:'まっすぐいって、みぎにまがってください。',r:'Massugu itte, migi ni magatte kudasai.'}],q:'Onde fica a estação?',o:['À esquerda','Em frente e à direita','Atrás','Bem aqui'],a:1,ex:'まっすぐ = em frente; みぎ = direita.'},
+  {d:[{s:'A',jp:'きょうはなんようびですか？',r:'Kyou wa nanyoubi desu ka?'},{s:'B',jp:'きょうはもくようびです。',r:'Kyou wa mokuyoubi desu.'}],q:'Que dia é hoje?',o:['Segunda','Quarta','Quinta','Sexta'],a:2,ex:'<strong>もくようび</strong> = quinta.'},
+  {d:[{s:'A',jp:'これはいくらですか？',r:'Kore wa ikura desu ka?'},{s:'B',jp:'せんごひゃくえんです。',r:'Sengohyaku en desu.'}],q:'Quanto custa?',o:['500 ienes','1.000 ienes','1.500 ienes','5.000 ienes'],a:2,ex:'せん=1000 + ごひゃく=500 = 1.500.'},
+  {d:[{s:'A',jp:'なにをたべますか？',r:'Nani wo tabemasu ka?'},{s:'B',jp:'すしをたべます。でも、さかなはすきじゃないです。',r:'Sushi wo tabemasu. Demo, sakana wa suki janai desu.'}],q:'O que B vai comer?',o:['Peixe','Carne','Nada','Sushi'],a:3,ex:'すし を たべます = vou comer sushi.'},
+  {d:[{s:'A',jp:'まいにちなんじにおきますか？',r:'Mainichi nanji ni okimasu ka?'},{s:'B',jp:'しちじにおきます。',r:'Shichiji ni okimasu.'}],q:'Que horas B acorda?',o:['6h','7h','8h','9h'],a:1,ex:'<strong>しちじ</strong> = 7 horas.'},
+  {d:[{s:'A',jp:'どこでかいものをしますか？',r:'Doko de kaimono wo shimasu ka?'},{s:'B',jp:'スーパーでかいものをします。',r:'Suupaa de kaimono wo shimasu.'}],q:'Onde B faz compras?',o:['Padaria','Conveniência','Supermercado','Mercado'],a:2,ex:'スーパー = supermercado.'},
+  {d:[{s:'A',jp:'しゅまつはなにをしましたか？',r:'Shuumatsu wa nani wo shimashita ka?'},{s:'B',jp:'ともだちとえいがをみました。',r:'Tomodachi to eiga wo mimashita.'}],q:'O que B fez no fim de semana?',o:['Estudou','Saiu com família','Assistiu filme com amigo','Ficou em casa'],a:2,ex:'ともだちと + えいがをみました.'},
+  {d:[{s:'A',jp:'このレストランはやすいですか？',r:'Kono resutoran wa yasui desu ka?'},{s:'B',jp:'いいえ、たかいですが、おいしいです。',r:'Iie, takai desu ga, oishii desu.'}],q:'O que B diz do restaurante?',o:['Barato e bom','Caro mas delicioso','Barato mas ruim','Caro e ruim'],a:1,ex:'たかい (caro) + おいしい (delicioso).'},
+];
+const MODULES=[
+  {id:'hira',name:'Hiragana',icon:'あ',lessons:['Vogais a-o','Grupo Ka','Grupo Sa','Grupo Ta','Grupo Na','Grupo Ha','Grupo Ma-Ya','Grupo Ra-N','Quiz Final'],unit:'Unidade 1'},
+  {id:'kata',name:'Katakana',icon:'ア',lessons:['Vogais A-O','Grupo Ka','Grupo Sa','Grupo Ta','Grupo Na','Grupo Ha','Grupo Ma-Ya','Grupo Ra-N','Quiz Final'],unit:'Unidade 2'},
+  {id:'kanji',name:'Kanji Básico',icon:'漢',lessons:['Natureza','Tempo','Pessoas','Números','Cores','Quiz Final'],unit:'Unidade 3'},
+  {id:'vocab',name:'Vocabulário',icon:'語',lessons:['Saudações','Família','Verbos','Comida','Lugares','Adjetivos','Números','Quiz Final'],unit:'Unidade 4'},
+  {id:'grammar',name:'Gramática',icon:'文',lessons:['Partículas は・を','Partículas に・で','Forma ます','Passado ました','Forma て','Adjetivos','Expressão ～たい','Quiz Final'],unit:'Unidade 5'},
+];
+const ACHIEVEMENTS=[
+  {k:'first',icon:'⛩️',nm:'Primeiro Passo',dc:'Complete sua primeira lição.',xp:'+50 XP'},
+  {k:'hira',icon:'あ',nm:'Mestre do Hiragana',dc:'Conclua todos os hiragana.',xp:'+200 XP'},
+  {k:'kata',icon:'ア',nm:'Mestre do Katakana',dc:'Conclua todos os katakana.',xp:'+200 XP'},
+  {k:'streak7',icon:'🔥',nm:'Semana de Fogo',dc:'Estude 7 dias seguidos.',xp:'+100 XP'},
+  {k:'kanji',icon:'漢',nm:'Aprendiz de Kanji',dc:'Conclua a unidade de Kanji.',xp:'+80 XP'},
+  {k:'sim1',icon:'📝',nm:'Primeiro Simulado',dc:'Complete um simulado.',xp:'+150 XP'},
+  {k:'pass',icon:'🏆',nm:'Aprovado!',dc:'Passe com ≥80 pts.',xp:'+300 XP'},
+  {k:'vocab',icon:'💬',nm:'Vocabulário Sólido',dc:'Conclua Vocabulário.',xp:'+120 XP'},
+  {k:'gram',icon:'文',nm:'Gramático',dc:'Conclua Gramática.',xp:'+200 XP'},
+  {k:'streak30',icon:'📚',nm:'30 Dias',dc:'Estude 30 dias seguidos.',xp:'+250 XP'},
+  {k:'perfect',icon:'🎯',nm:'Perfeito!',dc:'100% sem errar.',xp:'+100 XP'},
+  {k:'all',icon:'🗾',nm:'Mestre Completo',dc:'Conclua todos os módulos.',xp:'+500 XP'},
+];
+
+// ══════════════════════════════════════════════
+// MULTI-PROFILE STATE
+// ══════════════════════════════════════════════
+const PROFILES_KEY = 'nhm_profiles'; // list of profile names
+let S = null; // current user state
+let currentProfileKey = null;
+
+function profileKey(name){ return 'nhm_p_' + name.toLowerCase().trim().replace(/\s+/g,'_'); }
+
+function loadProfiles(){
+  try{ return JSON.parse(localStorage.getItem(PROFILES_KEY)||'[]'); }catch(e){return [];}
+}
+function saveProfiles(list){ try{localStorage.setItem(PROFILES_KEY,JSON.stringify(list));}catch(e){} }
+
+function freshState(name){
+  return {
+    name, goal:null, levelDecl:null, provaDate:null,
+    showProva:false, userLevel:'init',
+    xp:0, xpMax:300, lvl:1,
+    streak:0, lastDate:'',
+    modProg:{hira:0,kata:0,kanji:0,vocab:0,grammar:0},
+    achUnlocked:{}, simHistory:[],
+    vocabFilter:'Todos',
+  };
+}
+function saveState(){
+  if(!S||!currentProfileKey)return;
+  try{localStorage.setItem(currentProfileKey,JSON.stringify(S));}catch(e){}
+  // Update profiles list
+  const list=loadProfiles();
+  if(!list.find(p=>p.key===currentProfileKey)){
+    list.push({key:currentProfileKey,name:S.name,updated:Date.now()});
+    saveProfiles(list);
+  } else {
+    const p=list.find(p=>p.key===currentProfileKey);
+    if(p) p.updated=Date.now();
+    saveProfiles(list);
+  }
+}
+function loadProfile(name){
+  const key=profileKey(name);
+  currentProfileKey=key;
+  try{
+    const raw=localStorage.getItem(key);
+    if(raw){ S=JSON.parse(raw); S.name=name; return true; }
+  }catch(e){}
+  S=freshState(name); return false;
+}
+
+// ══════════════════════════════════════════════
+// ROUTING
+// ══════════════════════════════════════════════
+function goTo(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+function showPg(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  const nb=document.getElementById('nb-'+id);
+  if(nb) nb.classList.add('on');
+  if(id==='path')renderPath();
+  if(id==='ach')renderAch();
+  if(id==='prog')renderProg();
+  if(id==='profile')renderProfilePage();
+  if(id==='hira'||id==='kata'){ resetKanaPage(id); }
+  if(id==='vocab')buildVocabPage();
+  // scroll app-body to top
+  const ab=document.querySelector('.app-body');
+  if(ab)ab.scrollTop=0;
+}
+function toggleMore(){
+  document.getElementById('more-panel').classList.toggle('open');
+  document.getElementById('more-overlay').classList.toggle('open');
+  document.getElementById('nb-more').classList.toggle('on');
+}
+function closeMore(){
+  document.getElementById('more-panel').classList.remove('open');
+  document.getElementById('more-overlay').classList.remove('open');
+  document.getElementById('nb-more').classList.remove('on');
+}
+
+// ══════════════════════════════════════════════
+// SPLASH — PROFILE LIST
+// ══════════════════════════════════════════════
+function renderProfileList(){
+  const list=loadProfiles().sort((a,b)=>b.updated-a.updated);
+  const el=document.getElementById('profile-list');
+  if(!list.length){ el.style.display='none'; return; }
+  el.style.display='flex';
+  el.innerHTML=list.map(p=>`
+    <div class="profile-item" onclick="selectProfile('${p.name}')">
+      <div class="profile-avatar">${p.name.charAt(0).toUpperCase()}</div>
+      <div class="profile-name">${p.name}</div>
+      <div class="profile-arrow">›</div>
+    </div>`).join('');
+}
+function selectProfile(name){
+  loadProfile(name);
+  updateStreak(); saveState();
+  launchApp();
+}
+function checkName(){
+  document.getElementById('sp-btn').disabled=document.getElementById('sp-name').value.trim().length<2;
+}
+function createOrLoadProfile(){
+  const name=document.getElementById('sp-name').value.trim();
+  if(!name)return;
+  const existed=loadProfile(name);
+  updateStreak(); saveState();
+  if(existed && S.goal!==null && S.levelDecl!==null){
+    launchApp();
+  } else {
+    // New profile — start onboarding
+    obStep=0; goTo('s-ob'); obRender();
+  }
+}
+
+// ══════════════════════════════════════════════
+// ONBOARDING — conditional
+// ══════════════════════════════════════════════
+const OB_GOALS=[{icon:'✈️',label:'Viajar ao Japão'},{icon:'🎌',label:'Certificação JLPT N5'},{icon:'🎮',label:'Animes & Mangás'},{icon:'💼',label:'Trabalho / Estudo'}];
+const OB_LEVELS=[{icon:'🌱',label:'Nunca estudei japonês'},{icon:'🌿',label:'Conheço hiragana/katakana'},{icon:'🌳',label:'Já estudei um pouco'},{icon:'🎯',label:'Quero confirmar meu nível'}];
+const OB_DATES=[{icon:'📅',label:'Dezembro 2026'},{icon:'📅',label:'Julho 2026'},{icon:'📅',label:'Ainda não sei'},{icon:'📅',label:'Outra data'}];
+let obStep=0;
+
+function obSteps(){
+  const s=['goal','level'];
+  if(S.goal===1 && S.levelDecl!==null && S.levelDecl!==0) s.push('date');
+  return s;
+}
+function obRender(){
+  const steps=obSteps(), step=steps[obStep];
+  document.getElementById('ob-dots').innerHTML=steps.map((_,i)=>`<div class="ob-dot${i<=obStep?' act':''}"></div>`).join('');
+  document.getElementById('ob-next').disabled=true;
+  const t=document.getElementById('ob-title'),sub=document.getElementById('ob-sub'),cont=document.getElementById('ob-content');
+  if(step==='goal'){
+    t.textContent='Qual é o seu objetivo?';
+    sub.textContent='Toda a experiência será personalizada para você.';
+    cont.innerHTML=`<div class="ch-grid">${OB_GOALS.map((g,i)=>`<button class="ch-btn${S.goal===i?' sel':''}" onclick="obSel('goal',${i})"><span class="ch-icon">${g.icon}</span>${g.label}</button>`).join('')}</div>`;
+    if(S.goal!==null)document.getElementById('ob-next').disabled=false;
+  } else if(step==='level'){
+    t.textContent='Qual é o seu nível?';
+    sub.textContent='O sistema se adapta ao seu ritmo automaticamente.';
+    cont.innerHTML=`<div class="ch-grid">${OB_LEVELS.map((l,i)=>`<button class="ch-btn${S.levelDecl===i?' sel':''}" onclick="obSel('level',${i})"><span class="ch-icon">${l.icon}</span>${l.label}</button>`).join('')}</div>`;
+    if(S.levelDecl!==null)document.getElementById('ob-next').disabled=false;
+  } else {
+    t.textContent='Quando é a sua prova?';
+    sub.textContent='Criamos um plano diário baseado na data.';
+    cont.innerHTML=`<div class="ch-grid">${OB_DATES.map((d,i)=>`<button class="ch-btn${S.provaDate===i?' sel':''}" onclick="obSel('date',${i})"><span class="ch-icon">${d.icon}</span>${d.label}</button>`).join('')}</div>`;
+    if(S.provaDate!==null)document.getElementById('ob-next').disabled=false;
+  }
+}
+function obSel(field,i){
+  if(field==='goal'){S.goal=i;S.showProva=(i===1);S.levelDecl=null;S.provaDate=null;}
+  else if(field==='level'){S.levelDecl=i;S.provaDate=null;}
+  else{S.provaDate=i;}
+  saveState(); obRender();
+}
+function obNext(){
+  const steps=obSteps(); obStep++;
+  if(obStep>=steps.length){
+    saveState();
+    if(S.levelDecl===0){launchApp();}
+    else{startDiag();goTo('s-diag');}
+  } else {obRender();}
+}
+
+// ══════════════════════════════════════════════
+// DIAGNOSTIC
+// ══════════════════════════════════════════════
+let diagIdx=0,diagScore=0,diagAnswered=false,diagConsecWrong=0;
+function startDiag(){diagIdx=0;diagScore=0;diagAnswered=false;diagConsecWrong=0;renderDiagQ();}
+function renderDiagQ(){
+  const q=DIAG_QS[diagIdx];
+  document.getElementById('dg-fill').style.width=(diagIdx/DIAG_QS.length*100)+'%';
+  document.getElementById('dg-ct').textContent=`${diagIdx+1}/${DIAG_QS.length}`;
+  document.getElementById('dg-lbl').textContent=q.l;
+  document.getElementById('dg-q').innerHTML=q.q;
+  document.getElementById('dg-ex').className='dg-ex';document.getElementById('dg-ex').innerHTML='';
+  document.getElementById('dg-next').style.display='none';
+  diagAnswered=false;
+  document.getElementById('dg-opts').innerHTML=q.o.map((o,i)=>`<button class="dopt" onclick="answerDiag(${i})"><div class="ol">${'ABCD'[i]}</div>${o}</button>`).join('');
+}
+function answerDiag(c){
+  if(diagAnswered)return;diagAnswered=true;
+  const q=DIAG_QS[diagIdx];
+  document.querySelectorAll('.dopt').forEach((b,i)=>{
+    b.classList.add('lk');
+    if(i===q.a)b.classList.add(c===q.a?'ok':'rv');
+    if(i===c&&c!==q.a)b.classList.add('ng');
+  });
+  if(c===q.a){diagScore++;diagConsecWrong=0;}else{diagConsecWrong++;}
+  if(diagConsecWrong>=3)S.userLevel='init';
+  const ex=document.getElementById('dg-ex');
+  ex.innerHTML=(c===q.a?'✓ Correto! ':'✗ Incorreto. ')+q.ex;ex.className='dg-ex on';
+  document.getElementById('dg-next').style.display='block';
+}
+function diagNext(){
+  diagIdx++;if(diagIdx>=DIAG_QS.length){showDiagResult();return;}renderDiagQ();
+}
+function showDiagResult(){
+  const p=diagScore/DIAG_QS.length;
+  if(diagConsecWrong<3){
+    if(p>=0.8)S.userLevel='inter';else if(p>=0.5)S.userLevel='basic';else S.userLevel='init';
+  }
+  saveState();
+  const cfg={
+    init:{em:'🌱',ti:'Iniciante',badge:'lv-init',bl:'Nível: Iniciante',sub:`${diagScore}/${DIAG_QS.length} acertos. Começaremos pelo hiragana!`},
+    basic:{em:'🌿',ti:'Conhecimento Básico',badge:'lv-basic',bl:'Nível: Básico',sub:`${diagScore}/${DIAG_QS.length} acertos. Boa base!`},
+    inter:{em:'🌳',ti:'Intermediário Básico',badge:'lv-inter',bl:'Nível: Intermediário',sub:`${diagScore}/${DIAG_QS.length} acertos. Você pode avançar mais rápido!`},
+  }[S.userLevel];
+  document.getElementById('dr-em').textContent=cfg.em;
+  document.getElementById('dr-ti').textContent=cfg.ti;
+  const b=document.getElementById('dr-badge');b.textContent=cfg.bl;b.className='dr-badge '+cfg.badge;
+  document.getElementById('dr-sub').textContent=cfg.sub;
+  goTo('s-dr');
+}
+
+// ══════════════════════════════════════════════
+// LAUNCH APP
+// ══════════════════════════════════════════════
+function launchApp(){
+  updateStreak();saveState();
+  goTo('s-app');
+  // N5 only features
+  const simNb=document.getElementById('nb-sim');
+  simNb.classList.toggle('hidden',!S.showProva);
+  // Prova counter
+  const pw=document.getElementById('ds-prova-wrap');
+  const showDays=S.showProva&&S.provaDate!==null&&S.provaDate!==2;
+  pw.style.display=showDays?'block':'none';
+  if(showDays){
+    const pd=S.provaDate===0?new Date('2026-12-06'):new Date('2026-07-05');
+    document.getElementById('ds-prova').textContent=Math.max(0,Math.ceil((pd-new Date())/86400000));
+  }
+  document.getElementById('dash-banner').setAttribute('data-bg',S.showProva?'試':'学');
+  buildKanaGrids();buildVocabPage();renderXP();renderDashboard();renderAch();
+  // Show PWA install prompt (after 3s)
+  setTimeout(showInstallBanner,3000);
+}
+
+// ══════════════════════════════════════════════
+// STREAK
+// ══════════════════════════════════════════════
+function updateStreak(){
+  const today=new Date().toDateString();
+  if(S.lastDate===today)return;
+  const yest=new Date(Date.now()-86400000).toDateString();
+  S.streak=(S.lastDate===yest)?S.streak+1:(S.lastDate===''?1:1);
+  S.lastDate=today;
+  if(S.streak>=7)unlockAch('streak7');
+  if(S.streak>=30)unlockAch('streak30');
+}
+
+// ══════════════════════════════════════════════
+// XP
+// ══════════════════════════════════════════════
+function addXP(n){
+  S.xp+=n;
+  if(S.xp>=S.xpMax){S.xp-=S.xpMax;S.lvl++;S.xpMax=Math.round(S.xpMax*1.3);toast(`🎉 Nível ${S.lvl}!`);}
+  renderXP();saveState();
+}
+function renderXP(){
+  const pct=S.xp/S.xpMax;
+  document.getElementById('xp-bar').style.width=(pct*100)+'%';
+  document.getElementById('xp-lv').textContent=S.lvl;
+  document.getElementById('sl-streak').textContent=S.streak;
+  document.getElementById('ds-xp').textContent=S.xp;
+  document.getElementById('ds-streak').textContent=S.streak;
+}
+
+// ══════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════
+function calcPct(){
+  const tot=MODULES.reduce((a,m)=>a+m.lessons.length,0);
+  const done=MODULES.reduce((a,m)=>a+(S.modProg[m.id]||0),0);
+  return Math.round(done/tot*100);
+}
+function renderDashboard(){
+  const pct=calcPct();
+  document.getElementById('home-h1').textContent=`Olá, ${S.name}! 👋`;
+  document.getElementById('db-name').textContent=`Bem-vindo de volta, ${S.name}`;
+  document.getElementById('db-pct').textContent=pct+'%';
+  document.getElementById('db-bar-fill').style.width=pct+'%';
+  const h=Math.min(46,Math.round((S.modProg.hira||0)/9*46));
+  const k=Math.min(46,Math.round((S.modProg.kata||0)/9*46));
+  document.getElementById('sc-hira').innerHTML=`${h}<span>/46</span>`;
+  document.getElementById('sc-kata').innerHTML=`${k}<span>/46</span>`;
+  document.getElementById('sc-kanji').innerHTML=`${Math.min(100,Math.round((S.modProg.kanji||0)/6*100))}<span>/100</span>`;
+  document.getElementById('sc-vocab').innerHTML=`${Math.min(800,Math.round((S.modProg.vocab||0)/8*800))}<span>/800</span>`;
+  renderTasks();renderProg();
+}
+function renderTasks(){
+  const tl=document.getElementById('task-list');tl.innerHTML='';
+  let prevDone=true;
+  for(let mi=0;mi<MODULES.length;mi++){
+    const m=MODULES[mi];
+    if(!prevDone)break;
+    const done=S.modProg[m.id]||0,total=m.lessons.length;
+    if(done<total){
+      const t=document.createElement('div');t.className='task';
+      t.innerHTML=`<div class="tchk"></div><div class="tinfo"><div class="ttitle">${m.name} · ${m.lessons[done]}</div><div class="tsub">${m.unit}</div></div><div class="txp">+40 XP</div><button class="tgo" onclick="openLesson('${m.id}',${done},'${m.lessons[done]}','${m.name}')">Iniciar</button>`;
+      tl.appendChild(t);break;
+    }
+    prevDone=done>=total;
+  }
+  if(!tl.innerHTML) tl.innerHTML='<div style="font-size:14px;color:var(--muted);padding:8px">🎉 Todos os módulos concluídos!</div>';
+}
+
+// ══════════════════════════════════════════════
+// PATH
+// ══════════════════════════════════════════════
+function renderPath(){
+  const w=document.getElementById('path-wrap');w.innerHTML='';
+  let prevDone=true;
+  MODULES.forEach(mod=>{
+    const done=S.modProg[mod.id]||0,total=mod.lessons.length;
+    const complete=done>=total,unlocked=prevDone;
+    prevDone=complete;
+    const div=document.createElement('div');div.className='punit';
+    let nodes='';
+    mod.lessons.forEach((ls,li)=>{
+      const lDone=li<done,lActive=li===done&&unlocked,lLock=!lDone&&!lActive;
+      const st=lDone?'l-done':lActive?'l-act':'l-lock';
+      nodes+=`<div class="p-node">
+        ${li>0?`<div class="p-conn${lDone||lActive?' dn':''}"></div>`:''}
+        <button class="l-btn ${st}" ${lLock?'disabled':''} onclick="openLesson('${mod.id}',${li},'${ls}','${mod.name}')">
+          ${lDone?'✓':mod.icon}<span>${lDone?'Feito':lActive?'Iniciar':'🔒'}</span>
+          ${lLock?'<div class="l-lkico">🔒</div>':''}
+        </button>
+        <div class="l-name">${ls}</div>
+      </div>`;
+    });
+    div.innerHTML=`<div class="punit-hd">
+      <div class="punit-badge" style="background:${complete?'var(--green)':unlocked?'var(--red)':'var(--paper3)'};color:${complete||unlocked?'#fff':'var(--muted)'}">${mod.icon} ${mod.unit}</div>
+      <div class="punit-name">${mod.name} · ${done}/${total}</div>
+    </div><div class="p-nodes">${nodes}</div>`;
+    w.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════════════════
+// LESSON MODAL
+// ══════════════════════════════════════════════
+let LS={modId:null,li:null,qs:[],qi:0,lives:5,score:0,ans:false};
+function openLesson(modId,li,lessonName,modName){
+  const mi=MODULES.findIndex(m=>m.id===modId);
+  if(mi>0){
+    const prev=MODULES[mi-1];
+    if((S.modProg[prev.id]||0)<prev.lessons.length&&(S.modProg[modId]||0)<=li){
+      toast('⛔ Conclua o módulo anterior primeiro!');return;
+    }
+  }
+  if(li>(S.modProg[modId]||0)){toast('🔒 Conclua a lição anterior primeiro!');return;}
+  LS={modId,li,qs:shuffle(Q_BANK).slice(0,7),qi:0,lives:5,score:0,ans:false};
+  document.getElementById('ml-sec').textContent=modName;
+  document.getElementById('ml-nm').textContent=lessonName;
+  renderLives();renderLQ();
+  document.getElementById('l-overlay').classList.add('on');
+}
+function closeModal(){document.getElementById('l-overlay').classList.remove('on');renderDashboard();renderPath();}
+function renderLives(){
+  const el=document.getElementById('ml-lives');el.innerHTML='';
+  for(let i=0;i<5;i++){const h=document.createElement('span');h.className='hrt'+(i>=LS.lives?' lost':'');h.textContent='❤️';el.appendChild(h);}
+}
+function renderLQ(){
+  if(LS.qi>=LS.qs.length){showLessonDone();return;}
+  LS.ans=false;const q=LS.qs[LS.qi];
+  document.getElementById('ml-prog').style.width=(LS.qi/LS.qs.length*100)+'%';
+  document.getElementById('ml-body').innerHTML=`
+    <div class="lq-ctx">${q.ctx}</div>
+    <div class="lq-text">${q.q}</div>
+    <div class="l-opts">${q.o.map((o,i)=>`<button class="lopt" onclick="ansLesson(${i})"><div class="ol">${'ABCD'[i]}</div>${o}</button>`).join('')}</div>
+    <div class="l-ex" id="l-ex"></div>
+    <button class="l-next" id="l-next" onclick="nextLQ()">Próxima →</button>`;
+}
+function ansLesson(c){
+  if(LS.ans)return;LS.ans=true;
+  const q=LS.qs[LS.qi];
+  document.querySelectorAll('.lopt').forEach((b,i)=>{
+    b.classList.add('lk');
+    if(i===q.a)b.classList.add(c===q.a?'ok':'rv');
+    if(i===c&&c!==q.a)b.classList.add('ng');
+  });
+  if(c===q.a){LS.score++;addXP(20);toast('+20 XP!');}
+  else{LS.lives--;renderLives();if(LS.lives<=0){showLessonFail();return;}}
+  const ex=document.getElementById('l-ex');ex.innerHTML=q.ex;ex.className='l-ex on';
+  document.getElementById('l-next').style.display='block';
+}
+function nextLQ(){LS.qi++;renderLQ();}
+function showLessonDone(){
+  celebrate();addXP(60);
+  S.modProg[LS.modId]=Math.max(S.modProg[LS.modId]||0,LS.li+1);
+  unlockAch('first');
+  if((S.modProg.hira||0)>=9)unlockAch('hira');
+  if((S.modProg.kata||0)>=9)unlockAch('kata');
+  if((S.modProg.kanji||0)>=6)unlockAch('kanji');
+  if((S.modProg.vocab||0)>=8)unlockAch('vocab');
+  if((S.modProg.grammar||0)>=8)unlockAch('gram');
+  if(LS.lives===5)unlockAch('perfect');
+  if(MODULES.every(m=>(S.modProg[m.id]||0)>=m.lessons.length))unlockAch('all');
+  saveState();
+  document.getElementById('ml-body').innerHTML=`<div class="lc">
+    <div class="lc-ico">🏆</div>
+    <div class="lc-title">Lição concluída!</div>
+    <div class="lc-sub">${LS.score}/${LS.qs.length} acertos</div>
+    <div class="lc-stats">
+      <div class="lc-s"><div class="lc-sv">${LS.score}</div><div class="lc-sl">Acertos</div></div>
+      <div class="lc-s"><div class="lc-sv">${LS.lives}</div><div class="lc-sl">❤️ restantes</div></div>
+      <div class="lc-s"><div class="lc-sv">${LS.score*20+60}</div><div class="lc-sl">XP</div></div>
+    </div>
+    <button class="lc-btn" onclick="closeModal()">Continuar →</button>
+  </div>`;
+}
+function showLessonFail(){
+  document.getElementById('ml-body').innerHTML=`<div class="lc">
+    <div class="lc-ico">💔</div>
+    <div class="lc-title">Sem corações!</div>
+    <div class="lc-sub">Revise e tente de novo!</div>
+    <button class="lc-btn" onclick="openLesson('${LS.modId}',${LS.li},'','')">Tentar novamente</button>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════
+// KANA GRIDS — both study and write
+// ══════════════════════════════════════════════
+function buildKanaGrids(){
+  buildStudyGrid('hira-grid','hira-det',HIRA);
+  buildStudyGrid('kata-grid','kata-det',KATA);
+  buildWriteGrid('hira-wgrid','hira-wdet',HIRA);
+  buildWriteGrid('kata-wgrid','kata-wdet',KATA);
+}
+function resetKanaPage(type){
+  document.getElementById(`${type}-study-sec`).style.display='block';
+  document.getElementById(`${type}-write-sec`).style.display='none';
+  document.querySelectorAll(`#pg-${type} .kana-tab`).forEach((t,i)=>t.classList.toggle('on',i===0));
+  // clear detail panels
+  document.getElementById(`${type}-det`).innerHTML='';
+  document.getElementById(`${type}-wdet`).innerHTML='';
+  document.querySelectorAll(`#${type}-grid .kana-chip, #${type}-wgrid .kana-chip`).forEach(c=>c.classList.remove('sel'));
+}
+function setKanaTab(type,mode,btn){
+  document.querySelectorAll(`#pg-${type} .kana-tab`).forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(`${type}-study-sec`).style.display=mode==='study'?'block':'none';
+  document.getElementById(`${type}-write-sec`).style.display=mode==='write'?'block':'none';
+}
+function buildStudyGrid(gId,dId,data){
+  const g=document.getElementById(gId);g.innerHTML='';
+  data.forEach(k=>{
+    const c=document.createElement('div');c.className='kana-chip';
+    c.innerHTML=`<div class="kc">${k.c}</div><div class="kr">${k.r}</div>`;
+    c.onclick=()=>{
+      document.querySelectorAll('#'+gId+' .kana-chip').forEach(x=>x.classList.remove('sel'));
+      c.classList.add('sel');
+      document.getElementById(dId).innerHTML=`<div class="kana-detail-card">
+        <div class="kdc-char">${k.c}</div>
+        <div class="kdc-rom">${k.r}</div>
+        <div class="kdc-ex">${k.ex}</div>
+        <button class="kdc-close" onclick="document.getElementById('${dId}').innerHTML='';document.querySelectorAll('#${gId} .kana-chip').forEach(x=>x.classList.remove('sel'))">Fechar</button>
+      </div>`;
+      document.getElementById(dId).scrollIntoView({behavior:'smooth',block:'nearest'});
+    };
+    g.appendChild(c);
+  });
+}
+function buildWriteGrid(gId,dId,data){
+  const g=document.getElementById(gId);g.innerHTML='';
+  data.forEach(k=>{
+    const c=document.createElement('div');c.className='kana-chip';
+    c.innerHTML=`<div class="kc">${k.c}</div><div class="kr">${k.r}</div>`;
+    c.onclick=()=>{
+      document.querySelectorAll('#'+gId+' .kana-chip').forEach(x=>x.classList.remove('sel'));
+      c.classList.add('sel');
+      openWriteEx(dId,k);
+      setTimeout(()=>document.getElementById(dId).scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+    };
+    g.appendChild(c);
+  });
+}
+
+// ── WRITING EXERCISE ──
+let wCtx=null,wDrawing=false,wLX=0,wLY=0,wHas=false;
+function openWriteEx(detailId,k){
+  // Use a square canvas sized to viewport
+  const sz=Math.min(220,window.innerWidth-120);
+  document.getElementById(detailId).innerHTML=`
+  <div class="write-panel">
+    <div class="write-ref-row">
+      <div class="wref-char">${k.c}</div>
+      <div class="wref-info">
+        <div class="wref-rom">${k.r}</div>
+        <div class="wref-ex">${k.ex}</div>
+      </div>
+    </div>
+    <div class="write-hint">Escreva o caractere abaixo e compare com o modelo acima:</div>
+    <canvas id="wcanvas" class="w-canvas" width="${sz}" height="${sz}" style="height:${sz}px"></canvas>
+    <div class="write-btns">
+      <button class="wb wb-clear" onclick="clearWC(${sz})">Limpar</button>
+      <button class="wb wb-ok" id="wb-ok" onclick="markOk()" disabled>✓ Correto</button>
+      <button class="wb wb-retry" onclick="markRetry(${sz})">✗ Tentar novamente</button>
+    </div>
+    <div class="write-fb" id="write-fb"></div>
+  </div>`;
+  initWCanvas(sz);
+}
+function initWCanvas(sz){
+  const cv=document.getElementById('wcanvas');if(!cv)return;
+  wCtx=cv.getContext('2d');
+  wCtx.strokeStyle='#18181f';wCtx.lineWidth=Math.max(3,sz/60);wCtx.lineCap='round';wCtx.lineJoin='round';
+  wHas=false;
+  drawGrid(sz);
+  function p(e){const r=cv.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left)*(cv.width/r.width),y:(t.clientY-r.top)*(cv.height/r.height)};}
+  cv.onmousedown=cv.ontouchstart=e=>{e.preventDefault();wDrawing=true;const pt=p(e);wLX=pt.x;wLY=pt.y;cv.classList.add('active');wCtx.strokeStyle='#18181f';wCtx.lineWidth=Math.max(3,sz/60);};
+  cv.onmousemove=cv.ontouchmove=e=>{e.preventDefault();if(!wDrawing)return;const pt=p(e);wCtx.beginPath();wCtx.moveTo(wLX,wLY);wCtx.lineTo(pt.x,pt.y);wCtx.stroke();wLX=pt.x;wLY=pt.y;wHas=true;const ok=document.getElementById('wb-ok');if(ok)ok.disabled=false;};
+  cv.onmouseup=cv.onmouseleave=cv.ontouchend=()=>{wDrawing=false;};
+}
+function drawGrid(sz){
+  if(!wCtx)return;
+  wCtx.save();wCtx.strokeStyle='rgba(0,0,0,0.07)';wCtx.lineWidth=1;
+  wCtx.beginPath();wCtx.moveTo(sz/2,0);wCtx.lineTo(sz/2,sz);wCtx.stroke();
+  wCtx.beginPath();wCtx.moveTo(0,sz/2);wCtx.lineTo(sz,sz/2);wCtx.stroke();
+  wCtx.restore();
+}
+function clearWC(sz){
+  const cv=document.getElementById('wcanvas');if(!cv||!wCtx)return;
+  wCtx.clearRect(0,0,cv.width,cv.height);drawGrid(sz);
+  cv.classList.remove('active');wHas=false;
+  const ok=document.getElementById('wb-ok');if(ok)ok.disabled=true;
+  const fb=document.getElementById('write-fb');if(fb){fb.textContent='';fb.className='write-fb';}
+}
+function markOk(){if(!wHas)return;addXP(15);toast('+15 XP! 上手！');const fb=document.getElementById('write-fb');fb.textContent='✓ Ótimo traçado! Continue praticando.';fb.className='write-fb ok';}
+function markRetry(sz){const fb=document.getElementById('write-fb');fb.textContent='Observe o modelo e tente de novo.';fb.className='write-fb ng';clearWC(sz);}
+
+// ══════════════════════════════════════════════
+// VOCAB
+// ══════════════════════════════════════════════
+function buildVocabPage(){
+  const themes=['Todos',...new Set(VOCAB_ALL.map(v=>v.t))];
+  document.getElementById('vf-row').innerHTML=themes.map(t=>`<button class="vf${t===S.vocabFilter?' on':''}" onclick="setVF('${t}')">${t}</button>`).join('');
+  const f=S.vocabFilter==='Todos'?VOCAB_ALL:VOCAB_ALL.filter(v=>v.t===S.vocabFilter);
+  document.getElementById('v-grid').innerHTML=f.map(v=>`<div class="v-card"><div class="vw">${v.w}</div><div class="vr">${v.r}</div><div class="vm">${v.m}</div><span class="vt">${v.t}</span></div>`).join('');
+}
+function setVF(t){S.vocabFilter=t;saveState();buildVocabPage();}
+
+// ══════════════════════════════════════════════
+// SIMULADO
+// ══════════════════════════════════════════════
+let SS={sec:0,qi:0,vQs:[],gQs:[],aQs:[],ans:[[],[],[]],tInt:null,rem:0};
+function startSim(){
+  SS={sec:0,qi:0,vQs:shuffle(SIM_V).slice(0,10),gQs:shuffle(SIM_G).slice(0,10),aQs:shuffle(SIM_A).slice(0,8),ans:[[],[],[]],tInt:null,rem:0};
+  document.getElementById('sim-setup').style.display='none';
+  document.getElementById('sim-res').style.display='none';
+  document.getElementById('sim-run').style.display='block';
+  runSimSec();
+}
+function getSimQs(){return[SS.vQs,SS.gQs,SS.aQs][SS.sec];}
+function getSimTime(){return[25*60,50*60,30*60][SS.sec];}
+function getSimName(){return['Vocabulário · 語彙','Gramática · 文法','Auditiva · 聴解'][SS.sec];}
+function runSimSec(){
+  SS.qi=0;SS.rem=getSimTime();clearInterval(SS.tInt);
+  SS.tInt=setInterval(()=>{SS.rem--;updST();if(SS.rem<=0){clearInterval(SS.tInt);advSec();}},1000);
+  renderSimQ();
+}
+function updST(){const el=document.getElementById('sim-t');if(!el)return;const m=Math.floor(SS.rem/60),s=SS.rem%60;el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;el.className='sim-timer'+(SS.rem<60?' urg':'');}
+function renderSimQ(){
+  const qs=getSimQs();if(SS.qi>=qs.length){advSec();return;}
+  const q=qs[SS.qi],isA=SS.sec===2;
+  let dia='';
+  if(isA&&q.d)dia=`<div class="dialog-box">${q.d.map(d=>`<div style="margin-bottom:10px"><div class="dialog-spk">${d.s}：</div><div class="djp">${d.jp}</div><div class="dro">${d.r}</div></div>`).join('')}</div>`;
+  document.getElementById('sim-run').innerHTML=`
+    <div class="sim-run-hd">
+      <div><div class="sim-sec-lbl">Seção ${SS.sec+1}/3</div><div class="sim-sec-nm">${getSimName()}</div></div>
+      <div class="sim-timer" id="sim-t">--:--</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.38)">Q${SS.qi+1}/${qs.length}</div>
+    </div>
+    ${dia}
+    <div class="dg-card"><div class="dg-lbl">${q.ctx}</div><div class="dg-q">${q.q}</div></div>
+    <div class="dg-opts">${q.o.map((o,i)=>`<button class="dopt" onclick="ansSim(${i})"><div class="ol">${'ABCD'[i]}</div>${o}</button>`).join('')}</div>
+    <div class="dg-ex" id="sim-ex"></div>
+    <button class="dg-next" id="sim-nxt" onclick="nextSQ()" style="display:none">Próxima →</button>`;
+  updST();
+}
+function ansSim(c){
+  const q=getSimQs()[SS.qi];
+  document.querySelectorAll('.dopt').forEach((b,i)=>{b.classList.add('lk');if(i===q.a)b.classList.add(c===q.a?'ok':'rv');if(i===c&&c!==q.a)b.classList.add('ng');});
+  SS.ans[SS.sec].push(c===q.a?1:0);
+  const ex=document.getElementById('sim-ex');ex.innerHTML=(c===q.a?'✓ ':' ✗ ')+q.ex;ex.className='dg-ex on';
+  document.getElementById('sim-nxt').style.display='block';
+}
+function nextSQ(){SS.qi++;renderSimQ();}
+function advSec(){
+  clearInterval(SS.tInt);SS.sec++;
+  if(SS.sec>=3){showSimRes();return;}
+  document.getElementById('sim-run').innerHTML=`<div style="text-align:center;padding:50px 20px">
+    <div style="font-size:44px;margin-bottom:12px">✅</div>
+    <div style="font-family:'Shippori Mincho',serif;font-size:20px;margin-bottom:8px">Seção concluída!</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:24px">Próxima: ${getSimName()}</div>
+    <button onclick="runSimSec()" style="padding:13px 36px;background:var(--red);color:#fff;border-radius:50px;font-size:16px;font-weight:600">Continuar →</button>
+  </div>`;
+}
+function showSimRes(){
+  clearInterval(SS.tInt);
+  const v=SS.ans[0].reduce((a,b)=>a+b,0),g=SS.ans[1].reduce((a,b)=>a+b,0),a=SS.ans[2].reduce((a,b)=>a+b,0);
+  const vS=Math.round(v/SS.vQs.length*50),gS=Math.round(g/SS.gQs.length*70),aS=Math.round(a/SS.aQs.length*60);
+  const tot=vS+gS+aS,pass=tot>=80&&vS>=19&&gS>=27&&aS>=19;
+  celebrate();addXP(150);unlockAch('sim1');if(pass)unlockAch('pass');
+  const dt=new Date(),ds=`${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}`;
+  S.simHistory.push({date:ds,score:tot,pass});saveState();renderProg();
+  document.getElementById('sim-run').style.display='none';
+  const rw=document.getElementById('sim-res');rw.style.display='block';
+  rw.innerHTML=`<div class="res-hero">
+    <div class="res-jp">${pass?'合格':'不合格'}</div>
+    <div class="res-score">${tot} / 180 pontos</div>
+    <div class="res-sub">${pass?'Aprovado!':'Mín: 80pts · Vocab≥19 · Gram≥27 · Audit≥19'}</div>
+    <div class="res-secs">
+      <div class="rs ${vS>=19?'rsp':'rsf'}"><div class="rsnm">Vocab</div><div class="rsv">${vS}</div><div class="rsmx">/50·mín19</div></div>
+      <div class="rs ${gS>=27?'rsp':'rsf'}"><div class="rsnm">Gram</div><div class="rsv">${gS}</div><div class="rsmx">/70·mín27</div></div>
+      <div class="rs ${aS>=19?'rsp':'rsf'}"><div class="rsnm">Audit</div><div class="rsv">${aS}</div><div class="rsmx">/60·mín19</div></div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+    <button onclick="resetSim()" style="padding:13px;background:#fff;color:var(--ink);border:1px solid var(--border);border-radius:50px;font-size:14px;font-weight:500">Novo simulado</button>
+    <button onclick="showPg('prog')" style="padding:13px;background:var(--red);color:#fff;border-radius:50px;font-size:14px;font-weight:600">Ver progresso →</button>
+  </div>`;
+}
+function resetSim(){document.getElementById('sim-res').style.display='none';document.getElementById('sim-run').style.display='none';document.getElementById('sim-setup').style.display='block';}
+
+// ══════════════════════════════════════════════
+// PROGRESSO
+// ══════════════════════════════════════════════
+function renderProg(){
+  const rw=document.getElementById('prog-ready-wrap');
+  if(S.showProva){
+    const pct=calcPct();
+    const pd=S.provaDate===0?new Date('2026-12-06'):S.provaDate===1?new Date('2026-07-05'):null;
+    const days=pd?Math.max(0,Math.ceil((pd-new Date())/86400000)):'—';
+    rw.innerHTML=`<div class="ready-card">
+      <div class="ready-top">
+        <div class="ready-pct">${pct}%</div>
+        <div class="ready-info"><h3>Prontidão para o N5</h3><p>Baseado no conteúdo concluído.</p></div>
+      </div>
+      <span class="ready-badge">${days} dias até a prova · ${S.provaDate===0?'Dez 2026':S.provaDate===1?'Jul 2026':'Data a definir'}</span>
+    </div>`;
+  } else rw.innerHTML='';
+  const hp=Math.min(100,Math.round((S.modProg.hira||0)/9*100));
+  const kp=Math.min(100,Math.round((S.modProg.kata||0)/9*100));
+  const kanP=Math.min(100,Math.round((S.modProg.kanji||0)/6*100));
+  const vP=Math.min(100,Math.round((S.modProg.vocab||0)/8*100));
+  const gP=Math.min(100,Math.round((S.modProg.grammar||0)/8*100));
+  const sP=Math.round((hp+kp)/2);
+  document.getElementById('pp-sil').textContent=sP+'%';document.getElementById('pb-sil').style.width=sP+'%';document.getElementById('pd-sil').textContent=`Hira ${hp}% · Kata ${kp}%`;
+  document.getElementById('pp-kanji').textContent=kanP+'%';document.getElementById('pb-kanji').style.width=kanP+'%';document.getElementById('pd-kanji').textContent=`${kanP}% concluído`;
+  document.getElementById('pp-vocab').textContent=vP+'%';document.getElementById('pb-vocab').style.width=vP+'%';document.getElementById('pd-vocab').textContent=`${Math.round(vP*8)}/800`;
+  document.getElementById('pp-gram').textContent=gP+'%';document.getElementById('pb-gram').style.width=gP+'%';document.getElementById('pd-gram').textContent=`${Math.round(gP/2)}/50`;
+  const hl=document.getElementById('hist-list');
+  if(!S.simHistory||!S.simHistory.length){hl.innerHTML='<div style="font-size:14px;color:var(--muted);padding:8px">Nenhum simulado ainda.</div>';return;}
+  hl.innerHTML=[...S.simHistory].reverse().map((h,i)=>`<div class="hist-row">
+    <div class="hd">${h.date}</div><div class="ht">Simulado #${S.simHistory.length-i}</div>
+    <div class="hs" style="color:${h.pass?'var(--green)':h.score>=100?'var(--goldd)':'var(--red)'}">${h.score}/180</div>
+    <span class="hb ${h.pass?'hbp':h.score>=100?'hby':'hbn'}">${h.pass?'Aprovado':h.score>=100?'Parcial':'Reprovado'}</span>
+  </div>`).join('');
+}
+
+// ══════════════════════════════════════════════
+// ACHIEVEMENTS
+// ══════════════════════════════════════════════
+function unlockAch(k){
+  if(S.achUnlocked[k])return;S.achUnlocked[k]=true;saveState();
+  const a=ACHIEVEMENTS.find(x=>x.k===k);if(a)toast(`🏅 ${a.nm}!`);renderAch();
+}
+function renderAch(){
+  document.getElementById('ach-grid').innerHTML=ACHIEVEMENTS.map(a=>`
+    <div class="ach${S.achUnlocked[a.k]?'':' lk'}">
+      <div class="ach-ico">${a.icon}</div><div class="ach-nm">${a.nm}</div>
+      <div class="ach-dc">${a.dc}</div><div class="ach-xp">${a.xp}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════
+// PROFILE PAGE
+// ══════════════════════════════════════════════
+function renderProfilePage(){
+  document.getElementById('profile-page-content').innerHTML=`
+  <div class="profile-card">
+    <div class="prof-avatar-lg">${S.name.charAt(0).toUpperCase()}</div>
+    <div class="prof-name-lg">${S.name}</div>
+    <div class="prof-meta">Nível ${S.lvl} · ${S.xp} XP</div>
+    <div class="prof-stats">
+      <div class="pstat"><div class="pstat-v">${S.streak}</div><div class="pstat-l">🔥 Dias</div></div>
+      <div class="pstat"><div class="pstat-v">${calcPct()}%</div><div class="pstat-l">Progresso</div></div>
+      <div class="pstat"><div class="pstat-v">${S.simHistory.length}</div><div class="pstat-l">Simulados</div></div>
+    </div>
+    <button class="switch-btn" onclick="switchProfile()">Trocar perfil</button>
+    <button class="danger-btn" onclick="deleteProfile()">Deletar este perfil</button>
+  </div>`;
+}
+function switchProfile(){
+  if(confirm('Trocar de perfil? Seu progresso está salvo e você pode voltar a qualquer momento.'))
+    goTo('s-splash');
+}
+function deleteProfile(){
+  if(!confirm(`Deletar o perfil de ${S.name}? Esta ação não pode ser desfeita.`))return;
+  try{localStorage.removeItem(currentProfileKey);}catch(e){}
+  const list=loadProfiles().filter(p=>p.key!==currentProfileKey);
+  saveProfiles(list);S=null;currentProfileKey=null;
+  renderProfileList();goTo('s-splash');
+}
+
+// ══════════════════════════════════════════════
+// PWA INSTALL BANNER
+// ══════════════════════════════════════════════
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;});
+function showInstallBanner(){
+  if(localStorage.getItem('pwa_installed'))return;
+  if(window.matchMedia('(display-mode: standalone)').matches)return;
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  const banner=document.createElement('div');banner.className='install-banner';banner.id='install-banner';
+  if(isIOS){
+    banner.innerHTML=`<div class="ib-ico">📲</div>
+      <div class="ib-text"><div class="ib-title">Instale o app!</div><div class="ib-sub">Toque em Compartilhar → "Adicionar à Tela de Início"</div></div>
+      <button class="ib-close" onclick="document.getElementById('install-banner').remove()">✕</button>`;
+  } else {
+    banner.innerHTML=`<div class="ib-ico">📲</div>
+      <div class="ib-text"><div class="ib-title">Instale o app!</div><div class="ib-sub">Use offline, como app nativo</div></div>
+      <button class="ib-btn" onclick="installPWA()">Instalar</button>
+      <button class="ib-close" onclick="document.getElementById('install-banner').remove()">✕</button>`;
+  }
+  document.body.appendChild(banner);
+  setTimeout(()=>{const b=document.getElementById('install-banner');if(b)b.remove();},12000);
+}
+async function installPWA(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  const r=await deferredPrompt.userChoice;
+  if(r.outcome==='accepted'){localStorage.setItem('pwa_installed','1');toast('✅ App instalado!');}
+  deferredPrompt=null;
+  const b=document.getElementById('install-banner');if(b)b.remove();
+}
+
+// ══════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════
+function shuffle(a){const c=[...a];for(let i=c.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[c[i],c[j]]=[c[j],c[i]];}return c;}
+function toast(msg){const t=document.getElementById('toast');document.getElementById('toast-msg').textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);}
+function celebrate(){
+  const c=document.getElementById('cf');c.innerHTML='';
+  const cols=['#e63946','#e6a817','#1e8449','#1565c0','#6a1b9a'];
+  for(let i=0;i<40;i++){const p=document.createElement('div');p.className='cp';p.style.cssText=`left:${Math.random()*100}%;top:-8px;background:${cols[Math.floor(Math.random()*cols.length)]};transform:rotate(${Math.random()*360}deg);animation-duration:${.9+Math.random()*1.4}s;animation-delay:${Math.random()*.35}s;`;c.appendChild(p);}
+  setTimeout(()=>c.innerHTML='',3500);
+}
+
+// ══════════════════════════════════════════════
+// SERVICE WORKER REGISTRATION
+// ══════════════════════════════════════════════
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').then(reg=>{
+      console.log('[PWA] Service Worker registered:', reg.scope);
+    }).catch(err=>console.warn('[PWA] SW registration failed:', err));
+  });
+}
+
+// ══════════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════════
+(function boot(){
+  renderProfileList();
+  goTo('s-splash');
+})();
+</script>
+</body>
+</html>
